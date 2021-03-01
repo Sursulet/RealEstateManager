@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.openclassrooms.realestatemanager.databinding.ItemRealEstateBinding
 
 class RealEstatesAdapter:ListAdapter<RealEstateUiModel,RealEstatesAdapter.RealEstatesViewHolder>(DiffCallback()) {
@@ -28,6 +30,11 @@ class RealEstatesAdapter:ListAdapter<RealEstateUiModel,RealEstatesAdapter.RealEs
                 type.text = uiModel.type
                 city.text= uiModel.city
                 price.text= uiModel.price
+
+                Glide.with(binding.img)
+                    .load(uiModel.url)
+                    .transform(CenterCrop())
+                    .into(binding.img)
             }
         }
     }

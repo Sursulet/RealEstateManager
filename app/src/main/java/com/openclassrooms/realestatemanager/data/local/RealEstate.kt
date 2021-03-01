@@ -1,15 +1,20 @@
-package com.openclassrooms.realestatemanager.data
+package com.openclassrooms.realestatemanager.data.local
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.text.DateFormat
 
+@Entity(tableName = "real_estate")
 data class RealEstate(
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val type: String,
-    val price: String,
-    val surface: String,
-    val rooms: String,
-    val bathrooms: String,
-    val bedrooms: String,
+    val city: String,
+    val price: Float,
+    val surface: Int,
+    val rooms: Int,
+    val bathrooms: Int,
+    val bedrooms: Int,
     val description: String,
     val address: String,
     val vicinity: String,

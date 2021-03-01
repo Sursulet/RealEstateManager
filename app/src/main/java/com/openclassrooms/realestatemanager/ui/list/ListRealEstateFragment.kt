@@ -5,10 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstateBinding
+import com.openclassrooms.realestatemanager.ui.viewmodels.ListRealEstateViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ListRealEstateFragment : Fragment() {
+
+    private val viewModel: ListRealEstateViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +39,10 @@ class ListRealEstateFragment : Fragment() {
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
             }
+        }
+
+        viewModel.uiModelsLiveData.observe(viewLifecycleOwner) {
+            realEstateAdapter.submitList(it)
         }
     }
 
