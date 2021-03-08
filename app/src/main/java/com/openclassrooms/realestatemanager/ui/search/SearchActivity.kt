@@ -1,26 +1,25 @@
-package com.openclassrooms.realestatemanager.ui.edit
+package com.openclassrooms.realestatemanager.ui.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.databinding.ActivityEditBinding
-import dagger.hilt.android.AndroidEntryPoint
+import com.openclassrooms.realestatemanager.databinding.ActivitySearchBinding
+import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
 
-@AndroidEntryPoint
-class EditActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityEditBinding
+    private lateinit var binding: ActivitySearchBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEditBinding.inflate(layoutInflater)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragment_edit_container_view, EditFragment())
+                add(R.id.fragment_search_container_view, SearchFragment())
             }
         }
     }

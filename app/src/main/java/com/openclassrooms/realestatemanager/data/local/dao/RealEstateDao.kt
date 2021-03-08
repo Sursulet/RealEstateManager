@@ -1,15 +1,20 @@
-package com.openclassrooms.realestatemanager.data.local
+package com.openclassrooms.realestatemanager.data.local.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RealEstateDao {
 
-    @Query("SELECT * FROM real_estate")
+    @Query("SELECT * FROM real_estate ")
     fun getRealEstates(): Flow<List<RealEstate>>
-    //fun observeAllRealEstateItem(): LiveData<List<RealEstate>>
+
+    /*
+    @Query("SELECT * FROM real_estate WHERE type LIKE '%' || :searchQuery || '%' ORDER BY city DESC ")
+    fun getRealEstatesSortedBy(searchQuery: String): Flow<List<RealEstate>>
+
+     */
 
     @Query("SELECT * FROM real_estate WHERE id = :realEstateId")
     fun getRealEstate(realEstateId: Int): Flow<RealEstate>
@@ -22,4 +27,7 @@ interface RealEstateDao {
 
     @Delete
     suspend fun delete(realEstate: RealEstate)
+
+    @Query("DELETE FROM real_estate")
+    suspend fun deleteAll()
 }

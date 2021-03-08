@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
-import com.openclassrooms.realestatemanager.ui.list.ListRealEstateFragment
+import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
@@ -19,7 +21,7 @@ class DetailActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragment_detail_container_view, ListRealEstateFragment())
+                add(R.id.fragment_detail_container_view, DetailFragment())
             }
         }
     }

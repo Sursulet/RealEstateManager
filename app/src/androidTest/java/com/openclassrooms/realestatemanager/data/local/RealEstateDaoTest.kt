@@ -1,12 +1,11 @@
 package com.openclassrooms.realestatemanager.data.local
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
-import com.google.common.truth.Truth.assertThat
-import com.openclassrooms.realestatemanager.getOrAwaitValue
+import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
+import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -45,11 +44,8 @@ class RealEstateDaoTest {
     @Test
     fun insertRealEstate() = runBlockingTest {
         val realEstate = RealEstate(
-            1,"house", "city", 1f,1,
-            2,2,2,
-            "It's a great house", "Photo description",
-            "school", false,
-            1,"",
+            4,"flat", "PARIS", 7.1f,
+            "https://unsplash.com/photos/FTy5VSGIfiQ",
             "PEACH")
 
         dao.insert(realEstate)

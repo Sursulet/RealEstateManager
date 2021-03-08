@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.utils
 import android.content.Context
 import android.net.wifi.WifiManager
 import java.text.DateFormat
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -36,6 +37,12 @@ object Utils {
         val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
         return dateFormat.format(Date())
     }
+
+    fun withLargeIntegers(value: Double): String? {
+        val df = DecimalFormat("###,###,###")
+        return df.format(value)
+    }
+
 
     /**
      * Vérification de la connexion réseau

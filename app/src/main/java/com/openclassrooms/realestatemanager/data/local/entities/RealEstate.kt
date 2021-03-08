@@ -1,8 +1,7 @@
-package com.openclassrooms.realestatemanager.data.local
+package com.openclassrooms.realestatemanager.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.text.DateFormat
 
 @Entity(tableName = "real_estate")
 data class RealEstate(
@@ -17,12 +16,14 @@ data class RealEstate(
     val bedrooms: Int,
     val description: String,
     val address: String,
-    val vicinity: String,
-    val status: Boolean = false,
+    val nearest: String, //NEAREST
+    val status: Boolean = false,/*
     val created: Long = System.currentTimeMillis(),
-    val saleTimestamp: String,
+    val saleTimestamp: String?,*/
+    //val url: String,
+    //val photosDescription: String,
     val agent: String
-) {
+) /*{
     val createdDateFormatted: String
         get() = DateFormat.getDateInstance().format(created)
-}
+}*/

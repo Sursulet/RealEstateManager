@@ -9,4 +9,10 @@
     <string name="title_number_of_bathrooms">Bathrooms</string>
     <string name="title_number_of_bedrooms">Badrooms</string>
     <string name="title_location">Location</string>
+    <string name="label">Min</string>
+    <string name="content_description_end_icon">Minimum price</string>
+    <string name="loremIpsum">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget bibendum velit. Nam sem purus, commodo nec bibendum sed, tincidunt non elit. Vestibulum vel diam sit amet elit gravida elementum. Proin ac mi quis tellus luctus pretium ac ut quam. Phasellus congue ante risus, quis scelerisque dolor ullamcorper vel. Donec ultrices velit ac eleifend porttitor. Nunc magna ipsum, laoreet id posuere vel, hendrerit non elit. Nullam tincidunt mauris nisl, sit amet mollis augue tempor at. Cras vel metus vel ligula porta viverra ut in ante. Donec ultrices turpis vitae ultricies fringilla. Fusce non ultricies diam. Maecenas iaculis placerat ligula, non consectetur leo dictum a. Aliquam eget arcu nisi. Sed sollicitudin elit ut iaculis condimentum. "</string>
+    <string name="title_type">Type</string>
+    <string name="title_city">City</string>
+    <string name="title_price">Price</string>
 </resources>

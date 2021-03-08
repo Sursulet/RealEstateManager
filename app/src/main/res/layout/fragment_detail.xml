@@ -1,149 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="@dimen/default_margin"
+    android:paddingEnd="0dp"
     tools:context=".ui.detail.DetailFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/detail_title_media"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:padding="8dp"
         android:text="@string/title_media"
         android:textColor="@android:color/black"
         android:textSize="25sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/detail_media"
+        android:id="@+id/detail_media_recyclerview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/item_photo"
+        android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_title_media" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_media"
+        tools:listitem="@layout/item_photo" />
 
     <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_title_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_description"
-            android:textColor="@android:color/black"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_media" />
+        android:id="@+id/detail_title_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/title_description"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_media_recyclerview" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_title_description"
-            tools:text="oihefmnqlkjmfql" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_description"
+        tools:text="@string/loremIpsum" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_title_surface"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_surface"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_description" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/detail_title_surface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_baseline_settings_overscan_24"
+        android:drawablePadding="8dp"
+        android:padding="8dp"
+        android:text="@string/title_surface"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_description" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_surface"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_title_surface"
-            tools:text="oihefmnqlkjmfql" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_surface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_surface"
+        tools:text="oihefmnqlkjmfql" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_title_rooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_number_of_rooms"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_surface" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_title_rooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_number_of_rooms"
+        android:drawableStart="@drawable/ic_baseline_home_24"
+        android:drawablePadding="@dimen/default_margin"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_surface" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_rooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_title_rooms"
-            tools:text="oihefmnqlkjmfql" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_rooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_title_bathrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_number_of_bathrooms"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_rooms" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_rooms"
+        tools:text="oihefmnqlkjmfql" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_bathrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_title_bathrooms"
-            tools:text="oihefmnqlkjmfql" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_title_bathrooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_number_of_bathrooms"
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_title_bedrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_number_of_bedrooms"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_bathrooms" />
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_rooms" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_bedrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_title_bedrooms"
-            tools:text="oihefmnqlkjmfql" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_bathrooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_title_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_location"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_bedrooms" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_bathrooms"
+        tools:text="oihefmnqlkjmfql" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detail_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_title_location"
-            tools:text="oihefmnqlkjmfql" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_title_bedrooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_number_of_bedrooms"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_bathrooms" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/detail_map"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:context=".MapsActivity" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_bedrooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_bedrooms"
+        tools:text="oihefmnqlkjmfql" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_title_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_location"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_media"
+        app:layout_constraintTop_toTopOf="@+id/detail_title_surface" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/detail_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_media"
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_location"
+        tools:text="oihefmnqlkjmfql" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/detail_map"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_bedrooms"
+        tools:context=".MapsActivity" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

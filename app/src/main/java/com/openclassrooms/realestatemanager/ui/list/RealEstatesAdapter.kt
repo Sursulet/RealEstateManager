@@ -6,14 +6,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.openclassrooms.realestatemanager.databinding.ItemRealEstateBinding
 
-class RealEstatesAdapter:ListAdapter<RealEstateUiModel,RealEstatesAdapter.RealEstatesViewHolder>(DiffCallback()) {
+class RealEstatesAdapter(
+    private val listener: OnItemClickListener
+) : ListAdapter<RealEstateUiModel, RealEstatesAdapter.RealEstatesViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RealEstatesViewHolder {
-        val binding = ItemRealEstateBinding.inflate(LayoutInflater.from(parent.context), parent,false)
-        return RealEstatesViewHolder(binding)
+        val binding =
+            ItemRealEstateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RealEstatesViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(holder: RealEstatesViewHolder, position: Int) {
@@ -22,21 +24,37 @@ class RealEstatesAdapter:ListAdapter<RealEstateUiModel,RealEstatesAdapter.RealEs
     }
 
     class RealEstatesViewHolder(
-        private val binding:ItemRealEstateBinding
+        private val binding: ItemRealEstateBinding,
+        listener: OnItemClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(uiModel:RealEstateUiModel) {
+        init {
             binding.apply {
-                type.text = uiModel.type
-                city.text= uiModel.city
-                price.text= uiModel.price
-
-                Glide.with(binding.img)
-                    .load(uiModel.url)
-                    .transform(CenterCrop())
-                    .into(binding.img)
+                root.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onIemClick(position)
+                    }
+                }
             }
         }
+
+        fun bind(uiModel: RealEstateUiModel) {
+            binding.apply {
+                type.text = uiModel.type
+                city.text = uiModel.city
+                price.text = uiModel.price
+
+                Glide.with(img)
+                    .load(uiModel.url)
+                    .centerCrop()
+                    .into(img)
+            }
+        }
+    }
+
+    interface OnItemClickListener {
+        fun onIemClick(position: Int)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<RealEstateUiModel>() {
