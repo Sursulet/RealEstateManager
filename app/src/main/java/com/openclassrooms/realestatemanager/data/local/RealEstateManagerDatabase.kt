@@ -65,22 +65,6 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
 
             applicationScope.launch {
 
-                photoDao.insertPhotos(
-                    mutableListOf(Photo(
-                        id = 1,
-                        title = "First",
-                        url = "https://cdn.pixabay.com/photo/2016/06/24/10/47/house-1477041_1280.jpg",
-                        realEstateId = 1
-                    ))
-                )
-                photoDao.insertPhotos(
-                    mutableListOf(Photo(
-                        id = 2,
-                        title = "Three",
-                        url = "https://cdn.pixabay.com/photo/2013/10/09/02/27/lake-192990_1280.jpg",
-                        realEstateId = 2
-                    ))
-                )
                 realEstateDao.insert(
                     RealEstate(
                         id = 1,
@@ -114,6 +98,23 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                         nearest = "Swaythling Station, Chandlers Ford Station, Southampton Airport Parkway Station, Oakwood Primary School, Rosewood Free School",
                         agent = "YOSHI"
                     )
+                )
+
+                photoDao.insertPhotos(
+                    mutableListOf(Photo(
+                        id = 1,
+                        title = "First",
+                        url = "https://cdn.pixabay.com/photo/2016/06/24/10/47/house-1477041_1280.jpg",
+                        realEstateId = 1
+                    ))
+                )
+                photoDao.insertPhotos(
+                    mutableListOf(Photo(
+                        id = 2,
+                        title = "Three",
+                        url = "https://cdn.pixabay.com/photo/2013/10/09/02/27/lake-192990_1280.jpg",
+                        realEstateId = 2
+                    ))
                 )
             }
 

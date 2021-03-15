@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import com.openclassrooms.realestatemanager.repositories.PhotoRepository
 import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
-import com.openclassrooms.realestatemanager.ui.ADD_REAL_ESTATE_RESULT_OK
-import com.openclassrooms.realestatemanager.ui.EDIT_REAL_ESTATE_RESULT_OK
+import com.openclassrooms.realestatemanager.utils.Constants.ADD_REAL_ESTATE_RESULT_OK
+import com.openclassrooms.realestatemanager.utils.Constants.EDIT_REAL_ESTATE_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -29,13 +29,20 @@ class EditViewModel @Inject constructor(
             savedStateHandle.set("realEstateType", value)
         }
 
+    var realEstateAddress =
+        savedStateHandle.get<String>("realEstateAddress") ?: realEstate?.address ?: ""
+        set(value) {
+            field = value
+            savedStateHandle.set("realEstateAddress", value)
+        }
+
     var realEstateCity = savedStateHandle.get<String>("realEstateCity") ?: realEstate?.city ?: ""
         set(value) {
             field = value
             savedStateHandle.set("realEstateCity", value)
         }
 
-    var realEstatePrice = savedStateHandle.get<String>("realEstatePrice") ?: realEstate?.price ?: ""
+    var realEstatePrice = savedStateHandle.get<Float>("realEstatePrice") ?: realEstate?.price ?: 0f
         set(value) {
             field = value
             savedStateHandle.set("realEstatePrice", value)
@@ -48,14 +55,30 @@ class EditViewModel @Inject constructor(
             savedStateHandle.set("realEstateDesc", value)
         }
 
+    var realEstateStatus =
+        savedStateHandle.get<Boolean>("realEstateStatus") ?: realEstate?.status ?: false
+        set(value) {
+            field = value
+            savedStateHandle.set("realEstateStatus", value)
+        }
+
+    var realEstateAgent =
+        savedStateHandle.get<String>("realEstateAgent") ?: realEstate?.agent ?: ""
+        set(value) {
+            field = value
+            savedStateHandle.set("realEstateAgent", value)
+        }
+
     private val editRealEstateChannel = Channel<EditRealEstateEvent>()
     val editRealEstateEvent = editRealEstateChannel.receiveAsFlow()
 
     fun onSaveClick() {
         if (realEstateType.isBlank() ||
+            realEstateAddress.isBlank() ||
             realEstateCity.isBlank() ||
             //realEstatePrice.isBlank() ||
-            realEstateDesc.isBlank()
+            realEstateDesc.isBlank() ||
+            realEstateAgent.isBlank()
         ) {
             showInvalidInputMessage("Cannot be empty")
             return
@@ -63,22 +86,29 @@ class EditViewModel @Inject constructor(
 
         if (realEstate != null) {
             val updatedRealEstate =
-                realEstate.copy(type = realEstateType, city = realEstateCity, description = realEstateDesc)
+                realEstate.copy(
+                    type = realEstateType,
+                    address = realEstateAddress,
+                    city = realEstateCity,
+                    description = realEstateDesc,
+                    status = realEstateStatus,
+                    agent = realEstateAgent
+                )
             updateRealEstate(updatedRealEstate)
         } else {
             val newRealEstate = RealEstate(
                 type = realEstateType,
                 city = realEstateCity,
-                price = 300000000f,
+                price = realEstatePrice,
                 description = realEstateDesc,
-                status = false,
+                status = realEstateStatus,
                 address = "740 Park Avenue, Appt 6/7A, New York, NY 10021, United States",
                 surface = 750,
                 rooms = 8,
                 bathrooms = 2,
                 bedrooms = 2,
                 nearest = "school",
-                agent = "PEACH"
+                agent = realEstateAgent
             )
             createRealEstate(newRealEstate)
         }

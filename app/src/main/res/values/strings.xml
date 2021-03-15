@@ -7,7 +7,7 @@
     <string name="title_surface">Surface</string>
     <string name="title_number_of_rooms">Rooms</string>
     <string name="title_number_of_bathrooms">Bathrooms</string>
-    <string name="title_number_of_bedrooms">Badrooms</string>
+    <string name="title_number_of_bedrooms">Bedrooms</string>
     <string name="title_location">Location</string>
     <string name="label">Min</string>
     <string name="content_description_end_icon">Minimum price</string>
@@ -15,4 +15,5 @@
     <string name="title_type">Type</string>
     <string name="title_city">City</string>
     <string name="title_price">Price</string>
+    <string name="title_address">Address</string>
 </resources>

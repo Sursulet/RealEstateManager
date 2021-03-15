@@ -5,5 +5,6 @@ data class RealEstateUiModel(
     val url:String,
     val type:String,
     val city:String,
-    val price:String
+    val price:String,
+    val style: String
 )

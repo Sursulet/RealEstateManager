@@ -21,11 +21,38 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/search_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:id="@+id/search_house_btn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginTop="32dp"
+            android:background="@null"
+            android:src="@drawable/ic_baseline_house_24"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_type" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/search_flat_btn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toEndOf="@+id/search_house_btn"
+            app:layout_constraintTop_toBottomOf="@+id/search_type" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/search_building_btn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toEndOf="@+id/search_flat_btn"
+            app:layout_constraintTop_toBottomOf="@+id/search_type" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/search_btn_garden"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/search_building_btn"
             app:layout_constraintTop_toBottomOf="@+id/search_type" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -35,20 +62,22 @@
             android:text="Price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_btn" />
+            app:layout_constraintTop_toBottomOf="@+id/search_house_btn" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_price_min"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/label"
-            app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
-            app:startIconContentDescription="@string/content_description_end_icon"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
+            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_price">
+            app:layout_constraintTop_toBottomOf="@+id/search_price"
+            app:startIconContentDescription="@string/content_description_end_icon"
+            app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search_price_min_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -63,6 +92,7 @@
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/search_price"
             app:startIconContentDescription="@string/content_description_end_icon"
+            android:layout_marginStart="8dp"
             app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -84,11 +114,11 @@
             android:id="@+id/search_min_surface"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
-            app:startIconContentDescription="@string/content_description_end_icon"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_title_surface">
+            app:layout_constraintTop_toBottomOf="@+id/search_title_surface"
+            app:startIconContentDescription="@string/content_description_end_icon"
+            app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -142,7 +172,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:src="@drawable/ic_baseline_check_24"
-        android:contentDescription="TODO" />
+        android:contentDescription="TODO"
+        android:src="@drawable/ic_baseline_check_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
