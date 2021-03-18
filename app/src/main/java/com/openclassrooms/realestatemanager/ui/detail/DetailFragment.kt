@@ -5,8 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.commit
+import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,16 +58,20 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             }
         }
 
-        /*
-        val mapFragment = binding.detailMap as SupportMapFragment? // childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync {
-            val sydney = LatLng(-34.0, 151.0)
-            it.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-            it.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val mapFragmentContainer = binding.detailMap // childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        childFragmentManager.commit {
+            val fragment = SupportMapFragment()
+
+            fragment.getMapAsync {
+                val sydney = LatLng(-34.0, 151.0)
+                it.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+                it.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+                //viewModel.mapIsReady()
+            }
+
+            // TODO A Vérifier
+            add(mapFragmentContainer.id, fragment, null)
         }
-
-         */
-
     }
 
 }

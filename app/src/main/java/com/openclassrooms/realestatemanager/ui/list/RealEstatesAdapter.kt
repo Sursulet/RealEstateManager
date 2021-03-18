@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.databinding.ItemRealEstateBinding
 
 class RealEstatesAdapter(
-    private val listener: OnItemClickListener
+    private val listener: OnRealEstateClickListener
 ) : ListAdapter<RealEstateUiModel, RealEstatesAdapter.RealEstatesViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RealEstatesViewHolder {
@@ -25,22 +25,15 @@ class RealEstatesAdapter(
 
     class RealEstatesViewHolder(
         private val binding: ItemRealEstateBinding,
-        listener: OnItemClickListener
+        private val listener: OnRealEstateClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.apply {
-                root.setOnClickListener {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        listener.onIemClick(position)
-                    }
-                }
-            }
-        }
 
         fun bind(uiModel: RealEstateUiModel) {
             binding.apply {
+                root.setOnClickListener {
+                    listener.onRealEstateClick(uiModel)
+                }
+
                 type.text = uiModel.type
                 city.text = uiModel.city
                 price.text = uiModel.price
@@ -51,10 +44,6 @@ class RealEstatesAdapter(
                     .into(img)
             }
         }
-    }
-
-    interface OnItemClickListener {
-        fun onIemClick(position: Int)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<RealEstateUiModel>() {

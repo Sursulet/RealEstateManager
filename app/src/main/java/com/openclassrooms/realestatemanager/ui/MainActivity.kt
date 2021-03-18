@@ -10,15 +10,19 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
+import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
+import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
 import com.openclassrooms.realestatemanager.ui.edit.EditActivity
 import com.openclassrooms.realestatemanager.ui.edit.EditFragment
+import com.openclassrooms.realestatemanager.ui.list.OnRealEstateClickListener
+import com.openclassrooms.realestatemanager.ui.list.RealEstateUiModel
 import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
 import com.openclassrooms.realestatemanager.ui.search.SearchActivity
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private var twoPane: Boolean = false
@@ -101,4 +105,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRealEstateClick(model: RealEstateUiModel) {
+        if (twoPane) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add(R.id.fragment_container_flow, DetailFragment())
+            }
+        } else {
+            val intent = Intent(this, DetailActivity::class.java)
+            startActivity(intent)
+        }
+    }
 }
