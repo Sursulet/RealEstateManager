@@ -15,7 +15,6 @@ import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
 import com.openclassrooms.realestatemanager.ui.edit.EditActivity
 import com.openclassrooms.realestatemanager.ui.edit.EditFragment
 import com.openclassrooms.realestatemanager.ui.list.OnRealEstateClickListener
-import com.openclassrooms.realestatemanager.ui.list.RealEstateUiModel
 import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
 import com.openclassrooms.realestatemanager.ui.search.SearchActivity
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
@@ -38,9 +37,8 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
-                //TODO Ne doit s'afficher qu'après qu'un élément est été selectionné
                 if (binding.fragmentContainerFlow?.isVisible == true) {
-                    //add(R.id.fragment_container_flow, DetailFragment())
+                    replace(R.id.fragment_container_flow, DetailFragment())
                     twoPane = true
                 }
 
@@ -50,7 +48,7 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                 val fragment = RealEstatesFragment()
                 fragment.arguments = bundle
                 setReorderingAllowed(true)
-                add(R.id.fragment_container_view, fragment)
+                replace(R.id.fragment_container_view, fragment)
             }
         }
 
@@ -64,10 +62,12 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_add -> {
+                viewModel.onAddNewRealEstateClick()
+
                 if (twoPane) {
                     supportFragmentManager.commit {
                         setReorderingAllowed(true)
-                        replace(R.id.fragment_container_flow, EditFragment())
+                        replace(R.id.fragment_container_flow, EditFragment.newInstance(isEditing = false))
                     }
                 } else {
                     val intent = Intent(this, EditActivity::class.java)
@@ -77,15 +77,19 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                 true
             }
             R.id.action_edit -> {
+
                 if (twoPane) {
                     supportFragmentManager.commit {
                         setReorderingAllowed(true)
-                        replace(R.id.fragment_container_flow, EditFragment())
+                        replace(R.id.fragment_container_flow, EditFragment.newInstance(isEditing = true))
                     }
                 } else {
                     val intent = Intent(this, EditActivity::class.java)
                     startActivity(intent)
                 }
+
+                viewModel.onEditRealEstateClick()
+
                 true
             }
             R.id.action_search -> {
@@ -105,15 +109,16 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
         }
     }
 
-    override fun onRealEstateClick(model: RealEstateUiModel) {
+    override fun onRealEstateClick(id: Int) {
         if (twoPane) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragment_container_flow, DetailFragment())
+                replace(R.id.fragment_container_flow, DetailFragment())
             }
         } else {
             val intent = Intent(this, DetailActivity::class.java)
             startActivity(intent)
         }
     }
+
 }

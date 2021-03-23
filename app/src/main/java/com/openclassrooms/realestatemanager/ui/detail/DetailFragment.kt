@@ -2,11 +2,9 @@ package com.openclassrooms.realestatemanager.ui.detail
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.commit
-import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,18 +20,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private val viewModel: DetailViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = FragmentDetailBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentDetailBinding.bind(view)
+
+        binding.root.isVisible = false
+
         val photoAdapter = PhotoAdapter()
 
         binding.apply {
@@ -45,6 +38,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
 
         viewModel.uiModelLiveData.observe(viewLifecycleOwner) {
+            binding.root.isVisible = true
             binding.apply {
 
                 detailDescription.text = it.description
@@ -53,12 +47,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 detailLocation.text = it.address
                 detailRooms.text = it.rooms.toString()
                 detailSurface.text = it.surface.toString()
-
-                //photoAdapter.submitList()
             }
         }
 
-        val mapFragmentContainer = binding.detailMap // childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+
         childFragmentManager.commit {
             val fragment = SupportMapFragment()
 
@@ -66,12 +58,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 val sydney = LatLng(-34.0, 151.0)
                 it.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
                 it.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-                //viewModel.mapIsReady()
             }
 
-            // TODO A Vérifier
-            add(mapFragmentContainer.id, fragment, null)
+            add(R.id.detail_map,fragment,null)
         }
+
     }
 
 }

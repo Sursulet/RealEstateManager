@@ -26,6 +26,9 @@ interface RealEstateDao {
     @Query("DELETE FROM real_estate")
     suspend fun deleteAll()
 
+    @Query("SELECT * FROM real_estate WHERE price BETWEEN :minPrice AND :maxPrice")
+    fun search(minPrice: Float, maxPrice: Float): Flow<List<RealEstate>>
+
     @Query("SELECT * FROM real_estate WHERE type LIKE '%' || :searchQuery || '%' ORDER BY city DESC ")
     fun sortedBy(searchQuery: String): Flow<List<RealEstate>>
 

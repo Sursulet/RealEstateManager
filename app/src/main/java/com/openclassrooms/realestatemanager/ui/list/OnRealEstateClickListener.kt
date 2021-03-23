@@ -1,5 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.list
 
 interface OnRealEstateClickListener {
-    fun onRealEstateClick(model: RealEstateUiModel)
+    fun onRealEstateClick(id: Int)
 }

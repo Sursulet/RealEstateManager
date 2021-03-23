@@ -30,9 +30,7 @@ class RealEstatesAdapter(
 
         fun bind(uiModel: RealEstateUiModel) {
             binding.apply {
-                root.setOnClickListener {
-                    listener.onRealEstateClick(uiModel)
-                }
+                root.setOnClickListener { listener.onRealEstateClick(uiModel.id) }
 
                 type.text = uiModel.type
                 city.text = uiModel.city

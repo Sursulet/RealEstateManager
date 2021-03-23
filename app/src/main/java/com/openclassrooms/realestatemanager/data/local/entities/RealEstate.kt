@@ -1,10 +1,13 @@
 package com.openclassrooms.realestatemanager.data.local.entities
 
 import android.content.ContentValues
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "real_estate")
+@Parcelize
 data class RealEstate(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -44,4 +47,4 @@ data class RealEstate(
             if(values.containsKey("agent")) realEstate.agent = values.getAsString("agent")
         }
 }
-*/
+*/ : Parcelable

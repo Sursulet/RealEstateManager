@@ -65,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@+id/search_house_btn" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_price_min"
+            android:id="@+id/edit_layout_price_min"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/label"
@@ -77,7 +77,7 @@
             app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_price_min_edit"
+                android:id="@+id/edit_price_min"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -106,9 +106,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Surface"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="@id/search_type"
-            app:layout_constraintTop_toBottomOf="@+id/search_price_min" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_layout_price_min" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_min_surface"
@@ -158,6 +158,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_real_estate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_criteria" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"

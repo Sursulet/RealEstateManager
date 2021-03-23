@@ -1,28 +1,23 @@
 package com.openclassrooms.realestatemanager.ui.edit
 
-import android.Manifest
-import android.app.Activity.RESULT_OK
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
-import androidx.core.content.ContextCompat.checkSelfPermission
-import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.setFragmentResult
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentEditBinding
-import com.openclassrooms.realestatemanager.utils.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class EditFragment : Fragment(R.layout.fragment_edit) {
@@ -32,89 +27,105 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
     private val CAMERA_KEY = 1002
     private val IMG_KEY = 110
 
-    private val viewModel: EditViewModel by viewModels()
+    companion object {
+        private const val EXTRA_IS_EDITING = "EXTRA_IS_EDITING"
 
-    private var photos = ArrayList<String>()
+        fun newInstance(isEditing: Boolean): EditFragment {
+            val args = Bundle()
+            args.putBoolean(EXTRA_IS_EDITING, isEditing)
 
-    /*
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit, container, false)
+            val fragment = EditFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 
-     */
+    private val viewModel: EditViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.init(requireArguments().getBoolean(EXTRA_IS_EDITING))
         val binding = FragmentEditBinding.bind(view)
 
         binding.apply {
-            //TODO xml buttons add photo from gallery and from camera
-            editType.setText(viewModel.realEstateType)
-            editAddress.setText(viewModel.realEstateAddress)
-            editCity.setText(viewModel.realEstateCity)
-            editPrice.setText(viewModel.realEstatePrice.toString())
-            editDesc.setText(viewModel.realEstateDesc)
-            editCreatedDate.isVisible = viewModel.realEstate != null
-            //editCreatedDate.text = "${viewModel.realEstate?.createdDateFormatted}"
-            //editStatus.text = viewModel.realEstateStatus
-            editAgent.setText(viewModel.realEstateAgent)
-
-            editType.addTextChangedListener { viewModel.realEstateType = it.toString() }
-            editAddress.addTextChangedListener { viewModel.realEstateAddress = it.toString() }
-            editCity.addTextChangedListener { viewModel.realEstateCity = it.toString() }
-            editPrice.addTextChangedListener { viewModel.realEstatePrice = it.toString().toFloat() }
-            editDesc.addTextChangedListener { viewModel.realEstateDesc = it.toString() }
-
             actionSave.setOnClickListener {
                 viewModel.onSaveClick()
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.editRealEstateEvent.collect { event ->
-                when (event) {
-                    is EditViewModel.EditRealEstateEvent.ShowInvalidInputMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
-                    }
-                    is EditViewModel.EditRealEstateEvent.NavigateBackResult -> {
-                        binding.editType.clearFocus()
-                        binding.editAddress.clearFocus()
-                        binding.editCity.clearFocus()
-                        binding.editPrice.clearFocus()
-                        binding.editDesc.clearFocus()
-
-                        setFragmentResult("edit_request", bundleOf("edit_result" to event.result))
-                        //TODO: back to the list
-                    }
-                }.exhaustive
+        viewModel.liveData.observe(viewLifecycleOwner) {
+            Log.d("PEACH", "onViewCreated: $it")
+            binding.apply {
+                editType.setText(it.type)
+                editAddress.setText(it.address)
+                editCity.setText(it.city)
+                editPrice.setText(it.price.toString())
+                editDesc.setText(it.description)
+                //editSurface.setText(it.surface)
+                //editRooms.setText(it.rooms)
+                //editBedrooms.setText(it.bedrooms)
+                //editBathrooms.setText(it.bathrooms)
+                //editCreatedDate.isVisible = viewModel.realEstate != null
+                //editCreatedDate.text = "${viewModel.realEstate?.createdDateFormatted}"
+                //editStatus.text = viewModel.realEstateStatus
+                editAgent.setText(it.agent)
             }
         }
     }
 
-    private fun checkPermission() {
+    private fun checkPermission(permission: String, name: String, requestCode: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_DENIED) &&
-                (checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_DENIED)
-            ) {
-                val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                val permissionCoarse = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            when {
+                ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
+                    Toast.makeText(requireContext(), "$name permission granted", Toast.LENGTH_SHORT).show()
+                }
 
-                requestPermissions(permission, PERMISSION_READ_KEY)
-                requestPermissions(permissionCoarse, PERMISSION_WRITE_KEY)
-            } else {
-                importImg()
+                shouldShowRequestPermissionRationale(permission) -> showDialog(permission,name, requestCode)
+
+                else -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
             }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        fun innerCheck(name: String) {
+            if(grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireContext(), "$name permission refused", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "$name permission granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        when (requestCode) {
+            IMG_KEY -> innerCheck("gallery")
+            CAMERA_KEY -> innerCheck("camera")
+        }
+    }
+
+    private fun showDialog(permission: String,name: String,requestCode: Int) {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.apply {
+            setMessage("Permission to access your $name is required to use this app")
+            setTitle("Permission required")
+            setPositiveButton("OK") { dialog, which ->
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
+            }
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
         }
     }
 
@@ -123,37 +134,13 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
             Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "images/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        startActivityForResult(Intent.createChooser(intent, "select a picture"), IMG_KEY)
+        //resultLauncher.launch(Intent.createChooser(intent, "select a picture"), IMG_KEY)
 
     }
 
     fun importWithCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, CAMERA_KEY)
+        //resultLauncher.launch(intent, CAMERA_KEY)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == IMG_KEY) {
-            if (requestCode == RESULT_OK) {
-                if (data?.data != null) {
-                    val selectedImg: Uri? = data.data
-                    photos.add(selectedImg.toString())
-                } else if (data!!.clipData != null) {
-                    (0 until data.clipData!!.itemCount).forEach { i ->
-                        val uri = data.clipData!!.getItemAt(i).uri
-                        photos.add(uri.toString())
-                    }
-                }
-            } else if (resultCode == CAMERA_KEY) {
-                if (requestCode == RESULT_OK) {
-                    if (data?.data != null) {
-                        val selectedImg: Uri? = data.data
-                        photos.add(selectedImg.toString())
-                    }
-                }
-            }
-        }
-    }
 }

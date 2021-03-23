@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
-import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
