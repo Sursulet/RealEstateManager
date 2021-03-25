@@ -5,46 +5,49 @@ import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import com.openclassrooms.realestatemanager.repositories.PhotoRepository
 import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
 import com.openclassrooms.realestatemanager.repositories.SharedRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class EditViewModel @Inject constructor(
+class EditViewModel @AssistedInject constructor(
+    @Assisted
+    private val isEditing: Boolean,
     private val sharedRepository: SharedRepository,
     private val realEstateRepository: RealEstateRepository,
-    private val photoRepository: PhotoRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val photoRepository: PhotoRepository
 ) : ViewModel() {
 
-    private var isEditing: Boolean? = null
-    lateinit var liveData : LiveData<RealEstate>
-
-    fun init(isEditing: Boolean) {
-        this.isEditing = isEditing
-        if (isEditing) {
-            liveData = liveData {
-                sharedRepository.realEstateIdState.transform {
-                    it?.let { id ->
-                        realEstateRepository.getRealEstate(id).collect { re ->
-                            emit(re)
-                        }
-                    }
-                }.collect { emit(it) }
+    companion object {
+        fun provideFactory(
+            assistedFactory: AssistedFactory,
+            isEditing: Boolean
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(isEditing) as T
             }
-        } else {
-            liveData = MutableLiveData()
         }
     }
 
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(isEditing: Boolean): EditViewModel
+    }
 
-    private val editRealEstateChannel = Channel<EditRealEstateEvent>()
-    val editRealEstateEvent = editRealEstateChannel.receiveAsFlow()
+    @ExperimentalCoroutinesApi
+    val liveData : LiveData<RealEstate> = liveData {
+        if (isEditing) {
+            sharedRepository.realEstateIdState.filterNotNull().flatMapLatest {
+                realEstateRepository.getRealEstate(it)
+            }.collect {
+                emit(it)
+            }
+        }
+    }
 
     fun onSaveClick() {
-
 
     }
 
@@ -59,12 +62,12 @@ class EditViewModel @Inject constructor(
     }
 
     private fun showInvalidInputMessage(text: String) = viewModelScope.launch {
-        editRealEstateChannel.send(EditRealEstateEvent.ShowInvalidInputMessage(text))
+        // Use SingleLiveEvent instead !
+        //editRealEstateChannel.send(EditRealEstateEvent.ShowInvalidInputMessage(text))
     }
 
     sealed class EditRealEstateEvent {
         data class ShowInvalidInputMessage(val msg: String) : EditRealEstateEvent()
         data class NavigateBackResult(val result: Int) : EditRealEstateEvent()
     }
-
 }

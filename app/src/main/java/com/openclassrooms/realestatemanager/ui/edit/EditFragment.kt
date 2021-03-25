@@ -18,6 +18,7 @@ import androidx.fragment.app.viewModels
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentEditBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditFragment : Fragment(R.layout.fragment_edit) {
@@ -40,12 +41,19 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
         }
     }
 
-    private val viewModel: EditViewModel by viewModels()
+    @Inject
+    lateinit var editViewModelFactory: EditViewModel.AssistedFactory
+
+    private val viewModel: EditViewModel by viewModels {
+        EditViewModel.provideFactory(
+            editViewModelFactory,
+            requireArguments().getBoolean(EXTRA_IS_EDITING)
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.init(requireArguments().getBoolean(EXTRA_IS_EDITING))
         val binding = FragmentEditBinding.bind(view)
 
         binding.apply {
@@ -142,5 +150,4 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         //resultLauncher.launch(intent, CAMERA_KEY)
     }
-
 }
