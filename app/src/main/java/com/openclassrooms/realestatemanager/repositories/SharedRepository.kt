@@ -11,7 +11,7 @@ class SharedRepository @Inject constructor(
     private val realEstateDao: RealEstateDao
 ) {
 
-    private val _realEstateIdState = MutableStateFlow<Int?>(null)
+    private val _realEstateIdState = MutableStateFlow<Int?>(null) // -1
     val realEstateIdState: StateFlow<Int?> = _realEstateIdState
 
     private val _events = MutableStateFlow<Int?>(null)

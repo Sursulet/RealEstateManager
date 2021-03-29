@@ -9,38 +9,38 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.openclassrooms.realestatemanager.databinding.ItemPhotoBinding
 
-class PhotoAdapter : ListAdapter<PhotoUiModel, PhotoAdapter.PhotoViewHolder>(DiffCallback()) {
+class PhotosAdapter : ListAdapter<PhotoUiModel, PhotosAdapter.PhotosViewHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        val binding = ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent,false)
-        return PhotoAdapter.PhotoViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotosViewHolder {
+        val binding = ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PhotosViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PhotosViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    class PhotoViewHolder(
-        private val binding:ItemPhotoBinding
+    class PhotosViewHolder(
+        private val binding: ItemPhotoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uiModel: PhotoUiModel) {
             binding.apply {
                 name.text = uiModel.name
-                Glide.with(binding.img)
+                Glide.with(img)
                     .load(uiModel.url)
                     .transform(CenterCrop())
-                    .into(binding.img)
+                    .into(img)
             }
         }
     }
 
     class DiffCallback : DiffUtil.ItemCallback<PhotoUiModel>() {
-        override fun areItemsTheSame(oldItem: PhotoUiModel, newItem: PhotoUiModel): Boolean
-                = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: PhotoUiModel, newItem: PhotoUiModel) =
+            oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: PhotoUiModel, newItem: PhotoUiModel): Boolean
-                = oldItem == newItem
+        override fun areContentsTheSame(oldItem: PhotoUiModel, newItem: PhotoUiModel) =
+            oldItem == newItem
     }
 }

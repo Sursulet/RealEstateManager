@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
@@ -14,11 +13,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentEditBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditFragment : Fragment(R.layout.fragment_edit) {
@@ -41,15 +40,18 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
         }
     }
 
+    /*
     @Inject
     lateinit var editViewModelFactory: EditViewModel.AssistedFactory
 
-    private val viewModel: EditViewModel by viewModels {
+     */
+
+    private val viewModel: EditViewModel by viewModels() /*{
         EditViewModel.provideFactory(
             editViewModelFactory,
             requireArguments().getBoolean(EXTRA_IS_EDITING)
         )
-    }
+    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,11 +59,37 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
         val binding = FragmentEditBinding.bind(view)
 
         binding.apply {
-            actionSave.setOnClickListener {
-                viewModel.onSaveClick()
+            editType.addTextChangedListener { viewModel.realEstateType = it.toString() }
+            editAddress.addTextChangedListener { viewModel.realEstateAddress = it.toString() }
+            editCity.addTextChangedListener { viewModel.realEstateCity = it.toString() }
+            editState.addTextChangedListener { viewModel.realEstateState = it.toString() }
+            editPrice.addTextChangedListener { viewModel.realEstatePrice = it.toString() }
+            editDesc.addTextChangedListener { viewModel.realEstateDesc = it.toString() }
+
+            actionPickImages.setOnClickListener { importImg() }
+            actionSave.setOnClickListener { viewModel.onSaveClick() }
+        }
+
+        viewModel.uiLiveData.observe(viewLifecycleOwner) {
+            binding.apply {
+                editType.setText(it.type)
+                editAddress.setText(it.address)
+                editCity.setText(it.city)
+                editState.setText(it.state)
+                editPrice.setText(it.price.toString())
+                editDesc.setText(it.description)
+                //editSurface.setText(it.surface)
+                //editRooms.setText(it.rooms)
+                //editBedrooms.setText(it.bedrooms)
+                //editBathrooms.setText(it.bathrooms)
+                //editCreatedDate.isVisible = viewModel.realEstate != null
+                //editCreatedDate.text = "${viewModel.realEstate?.createdDateFormatted}"
+                //editStatus.text = viewModel.realEstateStatus
+                editAgent.setText(it.agent)
             }
         }
 
+        /*
         viewModel.liveData.observe(viewLifecycleOwner) {
             Log.d("PEACH", "onViewCreated: $it")
             binding.apply {
@@ -80,6 +108,8 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
                 editAgent.setText(it.agent)
             }
         }
+
+         */
     }
 
     private fun checkPermission(permission: String, name: String, requestCode: Int) {
@@ -138,10 +168,11 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
     }
 
     private fun importImg() {
-        val intent =
-            Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = Intent()
+            //Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "images/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        intent.action = Intent.ACTION_GET_CONTENT
         //resultLauncher.launch(Intent.createChooser(intent, "select a picture"), IMG_KEY)
 
     }

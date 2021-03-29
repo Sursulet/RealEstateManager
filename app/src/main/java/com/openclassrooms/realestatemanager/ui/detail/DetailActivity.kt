@@ -22,7 +22,8 @@ class DetailActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragment_detail_container_view, DetailFragment())
+                replace(R.id.fragment_detail_container_view, DetailFragment())
+                //addToBackStack(null)
             }
         }
     }

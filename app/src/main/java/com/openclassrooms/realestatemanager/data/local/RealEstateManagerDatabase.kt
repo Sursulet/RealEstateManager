@@ -101,20 +101,60 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                 )
 
                 photoDao.insertPhotos(
-                    mutableListOf(Photo(
-                        id = 1,
-                        title = "First",
-                        url = "https://cdn.pixabay.com/photo/2016/06/24/10/47/house-1477041_1280.jpg",
-                        realEstateId = 1
-                    ))
+                    mutableListOf(
+                        Photo(
+                            id = 1,
+                            title = "First",
+                            url = "https://cdn.pixabay.com/photo/2016/06/24/10/47/house-1477041_1280.jpg",
+                            realEstateId = 1
+                        ),
+                        Photo(
+                            id = 12,
+                            title = "Kitchen",
+                            url = "https://cdn.pixabay.com/photo/2017/07/09/03/19/home-2486092_1280.jpg",
+                            realEstateId = 1
+                        ),
+                        Photo(
+                            id = 13,
+                            title = "Bedroom",
+                            url = "https://cdn.pixabay.com/photo/2014/07/10/17/17/bedroom-389254_1280.jpg",
+                            realEstateId = 1
+                        ),
+                        Photo(
+                            id = 14,
+                            title = "Bathroom",
+                            url = "https://cdn.pixabay.com/photo/2017/02/24/12/24/bathroom-2094735_1280.jpg",
+                            realEstateId = 1
+                        )
+                    )
                 )
                 photoDao.insertPhotos(
-                    mutableListOf(Photo(
-                        id = 2,
-                        title = "Three",
-                        url = "https://cdn.pixabay.com/photo/2013/10/09/02/27/lake-192990_1280.jpg",
-                        realEstateId = 2
-                    ))
+                    mutableListOf(
+                        Photo(
+                            id = 2,
+                            title = "Three",
+                            url = "https://cdn.pixabay.com/photo/2013/10/09/02/27/lake-192990_1280.jpg",
+                            realEstateId = 2
+                        ),
+                        Photo(
+                            id = 22,
+                            title = "Kitchen",
+                            url = "https://cdn.pixabay.com/photo/2017/02/24/12/22/kitchen-2094707_1280.jpg",
+                            realEstateId = 2
+                        ),
+                        Photo(
+                            id = 23,
+                            title = "Bedroom",
+                            url = "https://cdn.pixabay.com/photo/2020/10/18/09/16/bedroom-5664221_1280.jpg",
+                            realEstateId = 2
+                        ),
+                        Photo(
+                            id = 24,
+                            title = "Bathroom",
+                            url = "https://cdn.pixabay.com/photo/2014/10/16/08/41/bathroom-490781_1280.jpg",
+                            realEstateId = 2
+                        )
+                    )
                 )
             }
 

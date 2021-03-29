@@ -11,11 +11,12 @@ import javax.inject.Inject
 @HiltViewModel
 class RealEstatesViewModel @Inject constructor(
     private val sharedRepository: SharedRepository,
-    private val realEstateRepository: RealEstateRepository,
+    realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository
 ) : ViewModel() {
 
     private val realEstatesFlow = realEstateRepository.getRealEstates()
+    /*
     val uiModelsLiveData = liveData {
         realEstatesFlow.collect { realEstates ->
             emit(realEstates.map {
@@ -28,6 +29,28 @@ class RealEstatesViewModel @Inject constructor(
                     style = "#FF4081"
                 )
             })
+        }
+    }
+
+     */
+
+    val uiModelsLiveData = liveData {
+        realEstatesFlow.collect { list ->
+            val uiModels = list.map {
+                photoRepository.getPhotos(it.id)
+                    .map { value ->
+                        RealEstateUiModel(
+                            id = it.id,
+                            url = value[0].url,
+                            type = it.type,
+                            city = it.city,
+                            price = "$" + it.price.toString(),
+                            style = "#FF4081"
+                        )
+                    }.first()
+            }
+
+            emit(uiModels)
         }
     }
 

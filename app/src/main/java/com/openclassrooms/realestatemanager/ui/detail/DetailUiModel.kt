@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.detail
 
+import com.google.android.gms.maps.model.LatLng
+
 data class DetailUiModel(
     val id: Int = 0,
     val type: String,
@@ -12,6 +14,7 @@ data class DetailUiModel(
     val description: String?,
     val address: String?,
     val nearest: String?,
-    val status: Boolean = false
-    //val photos: List<Photo>
+    val status: Boolean = false,
+    val photos: List<PhotoUiModel>,
+    val coordinates: LatLng
 )

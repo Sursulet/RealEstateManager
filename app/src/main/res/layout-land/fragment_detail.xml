@@ -149,7 +149,7 @@
             android:text="@string/title_location"
             android:textColor="@android:color/black"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/guideline_media"
+            app:layout_constraintStart_toStartOf="@+id/guideline_media_left"
             app:layout_constraintTop_toTopOf="@+id/detail_title_surface" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -158,8 +158,8 @@
             android:layout_height="wrap_content"
             android:maxLines="5"
             android:lines="5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline_media"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_media_right"
+            app:layout_constraintStart_toStartOf="@+id/guideline_media_left"
             app:layout_constraintTop_toBottomOf="@+id/detail_title_location"
             tools:text="750 Park Avenue \n Apt 6/7A \n NEW YORK \n NY 10021 \n United States" />
 
@@ -168,18 +168,25 @@
             android:id="@+id/detail_map"
             android:layout_width="0dp"
             android:layout_height="200dp"
+            app:layout_constraintStart_toEndOf="@+id/guideline_media_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_bedrooms"
+            app:layout_constraintTop_toBottomOf="@+id/detail_title_location"
             tools:context=".MapsActivity" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_media"
+            android:id="@+id/guideline_media_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5" />
+            app:layout_constraintGuide_percent=".33" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_media_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".66" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

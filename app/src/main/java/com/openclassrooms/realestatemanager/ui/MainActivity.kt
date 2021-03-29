@@ -67,7 +67,10 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                 if (twoPane) {
                     supportFragmentManager.commit {
                         setReorderingAllowed(true)
-                        replace(R.id.fragment_container_flow, EditFragment.newInstance(isEditing = false))
+                        replace(
+                            R.id.fragment_container_flow,
+                            EditFragment.newInstance(isEditing = false)
+                        )
                     }
                 } else {
                     val intent = Intent(this, EditActivity::class.java)
@@ -76,12 +79,16 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
 
                 true
             }
+
             R.id.action_edit -> {
 
                 if (twoPane) {
                     supportFragmentManager.commit {
                         setReorderingAllowed(true)
-                        replace(R.id.fragment_container_flow, EditFragment.newInstance(isEditing = true))
+                        replace(
+                            R.id.fragment_container_flow,
+                            EditFragment.newInstance(isEditing = true)
+                        )
                     }
                 } else {
                     val intent = Intent(this, EditActivity::class.java)

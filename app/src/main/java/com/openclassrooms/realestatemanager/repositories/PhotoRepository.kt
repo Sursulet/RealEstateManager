@@ -3,7 +3,9 @@ package com.openclassrooms.realestatemanager.repositories
 import com.openclassrooms.realestatemanager.data.local.dao.PhotoDao
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PhotoRepository @Inject constructor(
     private val photoDao: PhotoDao
 ) {

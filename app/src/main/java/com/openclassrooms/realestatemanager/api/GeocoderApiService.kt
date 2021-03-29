@@ -1,0 +1,43 @@
+package com.openclassrooms.realestatemanager.api
+
+import com.openclassrooms.realestatemanager.BuildConfig
+import com.openclassrooms.realestatemanager.data.geocoder.GeocoderResponse
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
+import java.util.logging.Level
+
+interface GeocoderApiService {
+
+    @GET("maps/api/geocode/json?")
+    fun getCoordinates(
+        @Query("address") address: String,
+        @Query("key") key: String = BuildConfig.GOOGLE_MAPS_KEY
+    ): Response<GeocoderResponse>
+
+    companion object {
+        private const val BASE_URL = "https://maps.googleapis.com/"
+
+        fun create(): GeocoderApiService {
+            val logger = HttpLoggingInterceptor().apply { level =
+                HttpLoggingInterceptor.Level.BASIC
+            }
+
+            val client = OkHttpClient.Builder()
+                .addInterceptor(logger)
+                .build()
+
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(GeocoderApiService::class.java)
+        }
+    }
+}

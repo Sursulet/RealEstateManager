@@ -44,9 +44,12 @@ class RealEstateDaoTest {
     @Test
     fun insertRealEstate() = runBlockingTest {
         val realEstate = RealEstate(
-            4,"flat", "PARIS", 7.1f,
-            "https://unsplash.com/photos/FTy5VSGIfiQ",
-            "PEACH")
+            id = 4, type = "flat", city = "PARIS", price = 7.1f,
+            surface = 0, rooms = 0, bedrooms = 0, bathrooms = 0,
+            description = "ghjkl", address = "", nearest = "",
+            status = false,
+            agent = "PEACH"
+        )
 
         dao.insert(realEstate)
 
