@@ -13,8 +13,11 @@ interface PhotoDao {
     @Query("SELECT * FROM photo")
     fun getAllPhotos(): Flow<List<Photo>>
 
-    @Query("SELECT * FROM photo WHERE id = :photoId")
-    fun getPhoto(photoId: Int): Flow<Photo>
+    @Query("SELECT * FROM photo WHERE realEstateId = :realEstateId LIMIT 1")
+    fun getPhoto(realEstateId: Int): Flow<Photo>
+
+    @Query("SELECT COUNT(*) FROM photo GROUP BY realEstateId HAVING COUNT(*) <= :size")
+    fun search(size: Int): Flow<List<Int>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPhotos(photos: List<Photo>)
@@ -24,4 +27,7 @@ interface PhotoDao {
 
     @Delete
     suspend fun delete(photo: Photo)
+
+    //@Query("SELECT * FROM real_estate WHERE photos LIKE '%' || || '%'") //create module gallery
+    //fun search()
 }

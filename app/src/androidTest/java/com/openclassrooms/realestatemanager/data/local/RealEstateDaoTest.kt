@@ -4,9 +4,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
+import com.google.common.truth.Truth.assertThat
 import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
-import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
+import com.openclassrooms.realestatemanager.utilities.realEstateA
+import com.openclassrooms.realestatemanager.utilities.realEstateB
+import com.openclassrooms.realestatemanager.utilities.realEstateC
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
@@ -27,13 +32,17 @@ class RealEstateDaoTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
-    fun setup() {
+    fun setup() = runBlocking {
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             RealEstateManagerDatabase::class.java
         ).allowMainThreadQueries().build()
 
         dao = database.realEstateDao()
+
+        dao.insert(realEstateA)
+        dao.insert(realEstateB)
+        dao.insert(realEstateC)
     }
 
     @After
@@ -42,19 +51,25 @@ class RealEstateDaoTest {
     }
 
     @Test
-    fun insertRealEstate() = runBlockingTest {
-        val realEstate = RealEstate(
-            id = 4, type = "flat", city = "PARIS", price = 7.1f,
-            surface = 0, rooms = 0, bedrooms = 0, bathrooms = 0,
-            description = "ghjkl", address = "", nearest = "",
-            status = false,
-            agent = "PEACH"
-        )
+    fun getRealEstates() = runBlockingTest {
+        val allRealEstateItem = dao.getRealEstates().first()
+        assertThat(allRealEstateItem.size).isEqualTo(3)
 
-        dao.insert(realEstate)
+        assertThat(allRealEstateItem[0]).isEqualTo(realEstateA)
+        assertThat(allRealEstateItem[1]).isEqualTo(realEstateB)
+        assertThat(allRealEstateItem[2]).isEqualTo(realEstateC)
+    }
 
-        val allRealEstateItem = dao.getRealEstates()
+    @Test
+    fun getRealEstate() = runBlockingTest {
+        val realEstateItem = dao.getRealEstate(realEstateA.id).first()
+        assertThat(realEstateItem).isEqualTo(realEstateA)
+    }
 
-        //assertThat(allRealEstateItem).contains(realEstate)
+    @Test
+    fun updateRealEstate() = runBlockingTest {
+        val x = realEstateA.copy()
+        val realEstateItem = dao.getRealEstate(realEstateA.id).first()
+        assertThat(realEstateItem).isEqualTo(realEstateA)
     }
 }

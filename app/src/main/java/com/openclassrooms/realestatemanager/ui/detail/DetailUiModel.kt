@@ -16,5 +16,5 @@ data class DetailUiModel(
     val nearest: String?,
     val status: Boolean = false,
     val photos: List<PhotoUiModel>,
-    val coordinates: LatLng
+    val coordinates: LatLng?
 )

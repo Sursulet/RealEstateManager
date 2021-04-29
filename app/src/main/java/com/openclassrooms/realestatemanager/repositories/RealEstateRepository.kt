@@ -1,7 +1,10 @@
 package com.openclassrooms.realestatemanager.repositories
 
+import android.database.Cursor
+import androidx.room.Query
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,19 +16,53 @@ class RealEstateRepository @Inject constructor(
     fun getRealEstates() = realEstateDao.getRealEstates()
     fun getRealEstate(realEstateId: Int) = realEstateDao.getRealEstate(realEstateId)
 
-    suspend fun insert(realEstate: RealEstate) { realEstateDao.insert(realEstate) }
-    suspend fun update(realEstate: RealEstate) { realEstateDao.update(realEstate) }
+    suspend fun insert(realEstate: RealEstate) {
+        realEstateDao.insert(realEstate)
+    }
 
-    suspend fun delete(realEstate: RealEstate) { realEstateDao.delete(realEstate) }
-    suspend fun deleteAll() { realEstateDao.deleteAll() }
+    suspend fun update(realEstate: RealEstate) {
+        realEstateDao.update(realEstate)
+    }
 
-    fun search(minPrice:Float,maxPrice:Float) = realEstateDao.search(minPrice, maxPrice)
+    suspend fun delete(realEstate: RealEstate) {
+        realEstateDao.delete(realEstate)
+    }
+
+    suspend fun deleteAll() {
+        realEstateDao.deleteAll()
+    }
+
+    fun search(
+        type: String,
+        zone: String,
+        minPrice: Float,
+        maxPrice: Float,
+        release: LocalDate,
+        status: Boolean,
+        minSurface: Int,
+        maxSurface: Int,
+        nearest: String,
+        size: Int
+    ) =
+        realEstateDao.search(
+            type = type,
+            zone = zone,
+            minPrice = minPrice,
+            maxPrice = maxPrice,
+            release = release,
+            status = status,
+            minSurface = minSurface,
+            maxSurface = maxSurface,
+            nearest = nearest,
+            size = size
+        )
+
+    fun searchPhoto() = realEstateDao.searchPhoto()
+    fun searchDate(date: LocalDate?) = realEstateDao.searchDate(date)
 
     /*
-    private val realEstates: Flow<List<RealEstate>> = realEstateDao.getRealEstates()
+    @Query("SELECT * FROM real_estate WHERE id = :realEstateId")
+    fun getRealEstatesWithCursor(realEstateId: Int): Cursor?
 
-    private val observableRealEstates = MutableLiveData<Flow<List<RealEstate>>>(realEstates)
-
-    //fun observeAllRealEstateItems(): LiveData<List<RealEstate>> { realEstateDao.getRealEstates() }
      */
 }

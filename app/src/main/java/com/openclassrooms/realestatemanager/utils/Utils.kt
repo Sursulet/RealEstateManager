@@ -4,12 +4,17 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.android.gms.maps.model.LatLng
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import java.io.IOException
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -39,8 +44,9 @@ object Utils {
      * @return
      */
     fun getTodayDate(): String? {
-        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
-        return dateFormat.format(Date())
+        val date = LocalDate.now()
+        val format = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        return date.format(format)
     }
 
 
@@ -94,5 +100,20 @@ object Utils {
         Log.d("PEACH", "getCoordinates: $latLng")
 
         return latLng
+    }
+
+    fun calculatePeriod(number: Long, time: String): LocalDate {
+        Log.d(TAG, "calculatePeriod: ")
+        lateinit var period: LocalDate
+        val date = LocalDate.now()
+
+        when(time) {
+            "days" -> period = date.minusDays(number)
+            "weeks" -> period = date.minusWeeks(number)
+            "month" -> period = date.minusMonths(number)
+            "years" -> period = date.minusYears(number)
+        }
+
+        return period
     }
 }

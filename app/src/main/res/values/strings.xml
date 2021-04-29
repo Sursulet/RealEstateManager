@@ -19,4 +19,37 @@
     <string name="action_save">Save Form</string>
     <string name="title_state">State</string>
     <string name="action_pick_images">Pick Images</string>
+    <string name="action_edit">Edit</string>
+    <string name="edit_status">Vendu</string>
+    <string name="title_agent">Agent</string>
+    <string name="title_nearest">Nearest</string>
+    <string name="search_title_location">Où ?</string>
+    <string name="action_search">Action search</string>
+    <string name="search_title_price">Price</string>
+    <string name="search_title_type">Type</string>
+    <string name="search_house">House</string>
+    <string name="search_title_period">Date</string>
+    <string name="search_status">Vendu</string>
+    <string name="search_title_surface">Surface</string>
+    <string name="search_title_nearest">nearest</string>
+    <string name="search_title_photos">Photos</string>
+    <string name="un">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five_and_more">5+</string>
+    <string name="search_flat">Flat</string>
+    <string name="search_castle">Castle</string>
+    <string name="search_loft">Loft</string>
+    <string name="search_building">Building</string>
+    <string name="search_land">Land</string>
+
+    <string-array name="periods">
+        <item> </item>
+        <item>days</item>
+        <item>weeks</item>
+        <item>months</item>
+        <item>years</item>
+    </string-array>
+
 </resources>

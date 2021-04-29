@@ -14,10 +14,13 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //binding.actionEdit.setOnClickListener {  }
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {

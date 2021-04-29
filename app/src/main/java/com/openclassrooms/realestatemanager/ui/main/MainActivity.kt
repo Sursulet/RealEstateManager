@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui
+package com.openclassrooms.realestatemanager.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +16,6 @@ import com.openclassrooms.realestatemanager.ui.edit.EditActivity
 import com.openclassrooms.realestatemanager.ui.edit.EditFragment
 import com.openclassrooms.realestatemanager.ui.list.OnRealEstateClickListener
 import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
-import com.openclassrooms.realestatemanager.ui.search.SearchActivity
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -100,6 +99,7 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                 true
             }
             R.id.action_search -> {
+                /*
                 if (twoPane) {
                     supportFragmentManager.commit {
                         setReorderingAllowed(true)
@@ -109,11 +109,27 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                     val intent = Intent(this, SearchActivity::class.java)
                     startActivity(intent)
                 }
+
+                 */
+
+                val dialog = SearchFragment()
+                dialog.show(supportFragmentManager, "searchDialog")
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val item: MenuItem? = menu?.findItem(R.id.action_edit)
+        item?.isEnabled = twoPane
+        if (twoPane) {
+            item?.icon?.alpha = 255
+        } else {
+            item?.icon?.alpha = 130
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onRealEstateClick(id: Int) {

@@ -2,7 +2,9 @@ package com.openclassrooms.realestatemanager.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.openclassrooms.realestatemanager.data.Converters
 import com.openclassrooms.realestatemanager.data.local.dao.PhotoDao
 import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
@@ -17,6 +19,7 @@ import javax.inject.Provider
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class RealEstateManagerDatabase : RoomDatabase() {
 
     abstract fun realEstateDao(): RealEstateDao
@@ -87,7 +90,7 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                         id = 2,
                         type = "House",
                         city = "Southampton",
-                        price = 2300000f,
+                        price = 23f,
                         description = "Donec vulputate eros sed dictum sodales. Praesent consequat nibh quam, quis euismod odio rutrum in. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis faucibus urna et imperdiet luctus. Cras ac libero pretium, cursus eros in, mattis felis. Nam placerat massa in elit laoreet posuere. Praesent auctor justo quis mattis lacinia. Pellentesque efficitur, tortor bibendum molestie vehicula, orci mauris accumsan est, ut vehicula augue lectus sed justo. ",
                         status = false,
                         address = "Chilworth Drove, Chilworth, Southampton, SO16",
@@ -111,7 +114,7 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                         Photo(
                             id = 12,
                             title = "Kitchen",
-                            url = "https://cdn.pixabay.com/photo/2017/07/09/03/19/home-2486092_1280.jpg",
+                            url = "https://cdn.pixabay.com/photo/2017/03/22/17/39/kitchen-2165756_1280.jpg",
                             realEstateId = 1
                         ),
                         Photo(
@@ -124,6 +127,12 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                             id = 14,
                             title = "Bathroom",
                             url = "https://cdn.pixabay.com/photo/2017/02/24/12/24/bathroom-2094735_1280.jpg",
+                            realEstateId = 1
+                        ),
+                        Photo(
+                            id = 15,
+                            title = "Garden",
+                            url = "https://cdn.pixabay.com/photo/2016/02/19/10/16/villa-1209148_1280.jpg",
                             realEstateId = 1
                         )
                     )

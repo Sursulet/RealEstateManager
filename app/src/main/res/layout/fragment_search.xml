@@ -4,187 +4,314 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".ui.search.SearchFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/search_type"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="what do you want to buy?"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/search_house_btn"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="32dp"
-            android:background="@null"
-            android:src="@drawable/ic_baseline_house_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_type" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/search_flat_btn"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintStart_toEndOf="@+id/search_house_btn"
-            app:layout_constraintTop_toBottomOf="@+id/search_type" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/search_building_btn"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintStart_toEndOf="@+id/search_flat_btn"
-            app:layout_constraintTop_toBottomOf="@+id/search_type" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/search_btn_garden"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/search_building_btn"
-            app:layout_constraintTop_toBottomOf="@+id/search_type" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/search_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Price"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_house_btn" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_layout_price_min"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/label"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_price"
-            app:startIconContentDescription="@string/content_description_end_icon"
-            app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_price_min"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_price_max"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/search_price"
-            app:startIconContentDescription="@string/content_description_end_icon"
-            android:layout_marginStart="8dp"
-            app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/search_title_surface"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Surface"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="@id/search_type"
-            app:layout_constraintTop_toBottomOf="@+id/edit_layout_price_min" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_min_surface"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_title_surface"
-            app:startIconContentDescription="@string/content_description_end_icon"
-            app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_max_surface"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/search_min_surface">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/search_title_vicinity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Surface"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_min_surface" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_criteria"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/label"
-            app:layout_constraintTop_toBottomOf="@+id/search_title_vicinity"
-            tools:layout_editor_absoluteX="16dp">
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/search_title_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/search_title_type"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_recyclerview"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="30dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_real_estate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_criteria" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/search_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:singleSelection="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_title_type">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_house"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_house"
+                    app:chipIcon="@drawable/ic_baseline_house_24"
+                    app:chipIconVisible="true" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_flat"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_flat" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_building"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_building" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_land"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_land" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/search_title_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_title_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_type" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_location_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_title_location">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Location"
+                    android:inputType="text"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/search_title_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_title_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_location_layout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_min_price_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_title_price">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_min_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toTopOf="@+id/search_min_price_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_max_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/search_title_period"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_title_period"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_min_price_layout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_period_number_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:errorEnabled="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_title_period">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_period_number"
+                    android:inputType="number"
+                    android:hint="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/search_period"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/search_period_number_layout"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toEndOf="@+id/search_period_number_layout"
+                app:layout_constraintTop_toTopOf="@+id/search_period_number_layout" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/search_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/search_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toTopOf="@+id/search_period_number_layout" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/search_title_surface"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_title_surface"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_period_number_layout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_surface_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_title_surface">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_min_surface"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_surface_max"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toTopOf="@+id/search_surface_min">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_max_surface"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/search_title_nearest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_title_nearest"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_surface_min" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_nearest_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_title_nearest">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_nearest"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/search_title_photos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_title_photos"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_nearest_layout" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/search_photos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_title_photos">
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/un" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/two" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/three" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/four" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/five_and_more" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/action_search_query"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:contentDescription="TODO"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/action_search"
         android:src="@drawable/ic_baseline_check_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
