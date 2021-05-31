@@ -37,7 +37,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".ui.search.SearchActivity" />
-        <activity android:name=".ui.edit.EditActivity" />
+        <activity android:name=".ui.addedit.AddEditActivity" />
         <activity android:name=".ui.detail.DetailActivity" />
         <activity
             android:name=".ui.main.MainActivity"

@@ -32,12 +32,13 @@ class RealEstatesAdapter(
             binding.apply {
                 root.setOnClickListener { listener.onRealEstateClick(uiModel.id) }
 
+                root.setCardBackgroundColor(uiModel.backgroundColorRes)
                 type.text = uiModel.type
                 city.text = uiModel.city
                 price.text = uiModel.price
 
                 Glide.with(img)
-                    .load(uiModel.url)
+                    .load(uiModel.bitmap)
                     .centerCrop()
                     .into(img)
             }

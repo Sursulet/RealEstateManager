@@ -1,15 +1,16 @@
 package com.openclassrooms.realestatemanager.data.local.entities
 
-import android.content.ContentValues
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.text.DateFormat
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
 @Entity(tableName = "real_estate")
+@Parcelize
 data class RealEstate(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     var type: String,
     var city: String,
     var price: Float?,
@@ -22,13 +23,11 @@ data class RealEstate(
     var nearest: String, //NEAREST
     var status: Boolean = false,
     val created: LocalDate = LocalDate.now(),
-    //val saleTimestamp: String?,
+    val saleTimestamp: String?,
     var agent: String
-) {
+) : Parcelable {
     val createdDateFormatted: String
         get() = created.toString()
-
-    //constructor(): this(0,"","",0f,0,0,0,0,0,"","","",false,0, "")
 
     /*
     fun fromContentValues(values: ContentValues): RealEstate {

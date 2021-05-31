@@ -8,14 +8,14 @@ import java.time.LocalDate
 @Dao
 interface RealEstateDao {
 
-    @Query("SELECT * FROM real_estate ")
+    @Query("SELECT * FROM real_estate")
     fun getRealEstates(): Flow<List<RealEstate>>
 
     @Query("SELECT * FROM real_estate WHERE id = :realEstateId")
-    fun getRealEstate(realEstateId: Int): Flow<RealEstate>
+    fun getRealEstate(realEstateId: Long): Flow<RealEstate>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(realEstate: RealEstate)
+    suspend fun insert(realEstate: RealEstate): Long
 
     @Update
     suspend fun update(realEstate: RealEstate)
@@ -26,17 +26,16 @@ interface RealEstateDao {
     @Query("DELETE FROM real_estate")
     suspend fun deleteAll()
 
-
     /* ** *SEARCH* ** */
     //@Query("SELECT * FROM real_estate WHERE city LIKE '%' || :location || '%' AND price LIKE '%' || :minPrice || '%' AND nearest LIKE '%' || :nearest || '%'")
     //@Query("SELECT * FROM real_estate WHERE type LIKE '%' || :type || '%' AND city LIKE '%' || :zone || '%' AND price > :minPrice AND price < :maxPrice ")
-    @Query("SELECT * FROM real_estate WHERE type LIKE '%' || :type || '%' AND city LIKE '%' || :zone || '%' AND price > :minPrice AND price < :maxPrice AND created <= :release AND status LIKE '%' || :status || '%' AND surface > :minSurface AND surface < :maxSurface AND nearest LIKE '%' || :nearest || '%' AND EXISTS (SELECT COUNT(*) FROM photo WHERE photo.realEstateId = real_estate.id GROUP BY realEstateId HAVING COUNT(*) >= :size)")
+    @Query("SELECT * FROM real_estate WHERE type LIKE '%' || :type || '%' AND city LIKE '%' || :zone || '%' AND price > :minPrice AND price < :maxPrice AND created >= :release AND status LIKE '%' || :status || '%' AND surface > :minSurface AND surface < :maxSurface AND nearest LIKE '%' || :nearest || '%' AND EXISTS (SELECT COUNT(*) FROM photo WHERE photo.realEstateId = real_estate.id GROUP BY realEstateId HAVING COUNT(*) >= :size)")
     fun search(
         type: String,
         zone: String,
         minPrice: Float,
         maxPrice: Float,
-        release: LocalDate,
+        release: LocalDate?,
         status: Boolean,
         minSurface: Int,
         maxSurface: Int,

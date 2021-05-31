@@ -27,9 +27,10 @@ class PhotosAdapter : ListAdapter<PhotoUiModel, PhotosAdapter.PhotosViewHolder>(
 
         fun bind(uiModel: PhotoUiModel) {
             binding.apply {
-                name.text = uiModel.name
+                name.text = uiModel.title
+
                 Glide.with(img)
-                    .load(uiModel.url)
+                    .load(uiModel.bitmap)
                     .transform(CenterCrop())
                     .into(img)
             }
@@ -38,7 +39,7 @@ class PhotosAdapter : ListAdapter<PhotoUiModel, PhotosAdapter.PhotosViewHolder>(
 
     class DiffCallback : DiffUtil.ItemCallback<PhotoUiModel>() {
         override fun areItemsTheSame(oldItem: PhotoUiModel, newItem: PhotoUiModel) =
-            oldItem.id == newItem.id
+            oldItem.title == newItem.title
 
         override fun areContentsTheSame(oldItem: PhotoUiModel, newItem: PhotoUiModel) =
             oldItem == newItem

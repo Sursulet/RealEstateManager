@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="32dp"
-    tools:context=".ui.edit.EditFragment">
+    tools:context=".ui.addedit.AddEditFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -15,42 +15,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/viewFinder"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="TODO" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/action_open_camera"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_photo_camera_24"
-                app:layout_constraintBottom_toTopOf="@+id/action_open_gallery"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edit_recyclerview" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/action_open_gallery"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_image_24"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/onAddEditPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_baseline_add_24"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_recyclerview"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/action_open_camera" />
+                app:layout_constraintTop_toTopOf="@+id/edit_recyclerview"
+                android:contentDescription="@string/desc_btn_add_photo" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/default_photo"
+                android:layout_width="120dp"
+                android:layout_height="140dp"
+                app:srcCompat="@drawable/ic_baseline_image_24"
+                android:contentDescription="@string/default_photo"
+                app:layout_constraintStart_toStartOf="@+id/edit_recyclerview"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/edit_recyclerview"
                 android:layout_width="0dp"
                 android:layout_height="140dp"
                 android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:background="#e8e8e8"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/action_open_camera"
-                app:layout_constraintTop_toBottomOf="@+id/viewFinder"
+                app:layout_constraintStart_toEndOf="@+id/onAddEditPhoto"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/item_photo" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -85,8 +79,7 @@
                     android:id="@+id/edit_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/title_type"
-                    android:inputType="textMultiLine" />
+                    android:hint="@string/title_type" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -219,7 +212,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/title_surface"
-                    android:inputType="textMultiLine" />
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -308,6 +301,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:contentDescription="@string/action_save"
-        android:src="@drawable/ic_baseline_check_24" />
+        app:srcCompat="@drawable/ic_baseline_check_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

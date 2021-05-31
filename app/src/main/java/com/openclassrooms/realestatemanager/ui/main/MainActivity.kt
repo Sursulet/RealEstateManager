@@ -10,10 +10,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
+import com.openclassrooms.realestatemanager.ui.addedit.AddEditActivity
+import com.openclassrooms.realestatemanager.ui.addedit.AddEditFragment
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
-import com.openclassrooms.realestatemanager.ui.edit.EditActivity
-import com.openclassrooms.realestatemanager.ui.edit.EditFragment
 import com.openclassrooms.realestatemanager.ui.list.OnRealEstateClickListener
 import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                     replace(R.id.fragment_container_flow, DetailFragment())
                     twoPane = true
                 }
+
+                viewModel.setTwoPane(twoPane)
 
                 val bundle = Bundle()
                 bundle.putBoolean("TwoPane", twoPane)
@@ -68,11 +70,11 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                         setReorderingAllowed(true)
                         replace(
                             R.id.fragment_container_flow,
-                            EditFragment.newInstance(isEditing = false)
+                            AddEditFragment()
                         )
                     }
                 } else {
-                    val intent = Intent(this, EditActivity::class.java)
+                    val intent = Intent(this, AddEditActivity::class.java)
                     startActivity(intent)
                 }
 
@@ -86,11 +88,11 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                         setReorderingAllowed(true)
                         replace(
                             R.id.fragment_container_flow,
-                            EditFragment.newInstance(isEditing = true)
+                            AddEditFragment()
                         )
                     }
                 } else {
-                    val intent = Intent(this, EditActivity::class.java)
+                    val intent = Intent(this, AddEditActivity::class.java)
                     startActivity(intent)
                 }
 
@@ -99,19 +101,6 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                 true
             }
             R.id.action_search -> {
-                /*
-                if (twoPane) {
-                    supportFragmentManager.commit {
-                        setReorderingAllowed(true)
-                        replace(R.id.fragment_container_flow, SearchFragment())
-                    }
-                } else {
-                    val intent = Intent(this, SearchActivity::class.java)
-                    startActivity(intent)
-                }
-
-                 */
-
                 val dialog = SearchFragment()
                 dialog.show(supportFragmentManager, "searchDialog")
                 true
@@ -124,15 +113,12 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val item: MenuItem? = menu?.findItem(R.id.action_edit)
         item?.isEnabled = twoPane
-        if (twoPane) {
-            item?.icon?.alpha = 255
-        } else {
-            item?.icon?.alpha = 130
-        }
+        if (twoPane) { item?.icon?.alpha = 255 }
+        else { item?.icon?.alpha = 130 }
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onRealEstateClick(id: Int) {
+    override fun onRealEstateClick(id: Long) {
         if (twoPane) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)

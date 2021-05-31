@@ -1,18 +1,19 @@
 package com.openclassrooms.realestatemanager.utils
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.google.android.gms.maps.model.LatLng
 import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import java.io.IOException
-import java.text.DateFormat
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -107,7 +108,7 @@ object Utils {
         lateinit var period: LocalDate
         val date = LocalDate.now()
 
-        when(time) {
+        when (time) {
             "days" -> period = date.minusDays(number)
             "weeks" -> period = date.minusWeeks(number)
             "month" -> period = date.minusMonths(number)
@@ -115,5 +116,14 @@ object Utils {
         }
 
         return period
+    }
+
+    fun getBitmapFromURL(src: String?): Bitmap {
+        val url = URL(src)
+        val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+        connection.doInput = true
+        connection.connect()
+        val input: InputStream = connection.inputStream
+        return BitmapFactory.decodeStream(input)
     }
 }

@@ -1,9 +1,11 @@
 package com.openclassrooms.realestatemanager.repositories
 
 import android.database.Cursor
+import android.util.Log
 import androidx.room.Query
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,10 +16,13 @@ class RealEstateRepository @Inject constructor(
 ) {
 
     fun getRealEstates() = realEstateDao.getRealEstates()
-    fun getRealEstate(realEstateId: Int) = realEstateDao.getRealEstate(realEstateId)
 
-    suspend fun insert(realEstate: RealEstate) {
-        realEstateDao.insert(realEstate)
+    fun getRealEstate(realEstateId: Long) = realEstateDao.getRealEstate(realEstateId)
+
+    suspend fun insert(realEstate: RealEstate): Long {
+        val id = realEstateDao.insert(realEstate)
+        Log.d(TAG, "insert: $id")
+        return id
     }
 
     suspend fun update(realEstate: RealEstate) {
@@ -37,25 +42,24 @@ class RealEstateRepository @Inject constructor(
         zone: String,
         minPrice: Float,
         maxPrice: Float,
-        release: LocalDate,
+        release: LocalDate?,
         status: Boolean,
         minSurface: Int,
         maxSurface: Int,
         nearest: String,
         size: Int
-    ) =
-        realEstateDao.search(
-            type = type,
-            zone = zone,
-            minPrice = minPrice,
-            maxPrice = maxPrice,
-            release = release,
-            status = status,
-            minSurface = minSurface,
-            maxSurface = maxSurface,
-            nearest = nearest,
-            size = size
-        )
+    ) = realEstateDao.search(
+        type = type,
+        zone = zone,
+        minPrice = minPrice,
+        maxPrice = maxPrice,
+        release = release,
+        status = status,
+        minSurface = minSurface,
+        maxSurface = maxSurface,
+        nearest = nearest,
+        size = size
+    )
 
     fun searchPhoto() = realEstateDao.searchPhoto()
     fun searchDate(date: LocalDate?) = realEstateDao.searchDate(date)

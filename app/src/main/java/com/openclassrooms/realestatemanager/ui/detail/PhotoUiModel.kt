@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.ui.detail
 
+import android.graphics.Bitmap
+
 data class PhotoUiModel(
-    val id:String,
-    val url:String,
-    val name:String
+    val id: Long = 0,
+    val bitmap: Bitmap,
+    val title: String
 )

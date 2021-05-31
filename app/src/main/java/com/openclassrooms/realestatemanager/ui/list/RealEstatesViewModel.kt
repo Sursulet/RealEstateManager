@@ -1,44 +1,82 @@
 package com.openclassrooms.realestatemanager.ui.list
 
+import android.graphics.Color
 import android.util.Log
-import androidx.lifecycle.*
-import com.openclassrooms.realestatemanager.repositories.CurrentSearchParametersRepository
-import com.openclassrooms.realestatemanager.repositories.PhotoRepository
-import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
-import com.openclassrooms.realestatemanager.repositories.SharedRepository
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.di.CoroutinesDispatchers
+import com.openclassrooms.realestatemanager.repositories.*
+import com.openclassrooms.realestatemanager.utils.Constants.NO_REAL_ESTATE_ID
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
+import com.openclassrooms.realestatemanager.utils.SearchQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RealEstatesViewModel @Inject constructor(
-    private val sharedRepository: SharedRepository,
+    private val twoPaneRepository: TwoPaneRepository,
+    private val selectedIdRepository: SelectedIdRepository,
     realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
-    currentSearchParametersRepository: CurrentSearchParametersRepository
+    searchQueryRepository: SearchQueryRepository,
+    private val coroutineDispatchers: CoroutinesDispatchers
 ) : ViewModel() {
 
-    private val realEstatesFlow = realEstateRepository.getRealEstates()
-    private val searchQuery = currentSearchParametersRepository.current
-    val value = if(searchQuery.value == null) realEstatesFlow else searchQuery
+    private val twoPane = twoPaneRepository.twoPane
+    private val searchQuery = searchQueryRepository.searchQuery
 
-    val uiModelsLiveData = liveData {
-        value.collect { list ->
-            val uiModels = list?.map {
-                val photoURl = photoRepository.getPhoto(it.id).firstOrNull()
-                RealEstateUiModel(
-                    id = it.id,
-                    url = photoURl?.url,
-                    type = it.type,
-                    city = it.city,
-                    price = "$" + it.price.toString(),
-                    style = "#FF4081"
-                )
-            }
+    private val _selectedId = MutableStateFlow(NO_REAL_ESTATE_ID)
+    private val selectedId = _selectedId.asStateFlow()
 
-            emit(uiModels)
+    private val realEstatesFlow = searchQuery.flatMapLatest { searchQuery ->
+        if (searchQuery == null) {
+            realEstateRepository.getRealEstates()
+        } else {
+            realEstateRepository.search(
+                searchQuery.type,
+                searchQuery.zone,
+                searchQuery.minPrice,
+                searchQuery.maxPrice,
+                searchQuery.release,
+                searchQuery.status,
+                searchQuery.minSurface,
+                searchQuery.maxSurface,
+                searchQuery.nearest,
+                searchQuery.nbPhotos
+            )
         }
     }
+
+    val uiModels = MutableStateFlow<List<RealEstateUiModel>>(listOf())
+
+    init {
+        viewModelScope.launch(coroutineDispatchers.iOCoroutineDispatcher) {
+            combine(twoPane, selectedId, realEstatesFlow) { twoPane, id, list ->
+                list.map {
+                    val photo = photoRepository.getPhoto(it.id).first()
+                    val color = if (twoPane && id == it.id) R.color.colorAccent else Color.WHITE
+                    RealEstateUiModel(
+                        id = it.id,
+                        bitmap = photo.bitmap,
+                        type = it.type,
+                        city = it.city,
+                        price = "$" + it.price.toString(),
+                        backgroundColorRes = color,
+                        style = "color"
+                    )
+                }
+            }.collect {
+                uiModels.value = it
+            }
+        }
+
+    }
+
     /*
     val uiModelsLiveData: LiveData<List<RealEstateUiModel>> = liveData {
         realEstatesFlow.collect { list ->
@@ -61,7 +99,16 @@ class RealEstatesViewModel @Inject constructor(
 
      */
 
-    fun onRealEstateSelected(realEstateId: Int) {
-        sharedRepository.setRealEstateId(realEstateId)
+    fun onRealEstateSelected(realEstateId: Long) {
+        _selectedId.value = realEstateId
+        selectedIdRepository.setRealEstateId(realEstateId)
     }
+
+    data class Wrapper(
+        val searchQuery: SearchQuery,
+        val type: String,
+        val zone: String,
+        val minPrice: Float,
+        val maxPrice: Float
+    )
 }

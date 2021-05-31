@@ -4,25 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.AutoCompleteTextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
-import com.google.android.material.snackbar.Snackbar
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentSearchBinding
+import com.openclassrooms.realestatemanager.utils.Constants.PERIODS
 import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import com.openclassrooms.realestatemanager.utils.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class SearchFragment : DialogFragment(R.layout.fragment_search),
-    AdapterView.OnItemSelectedListener {
+class SearchFragment : DialogFragment(R.layout.fragment_search) {
 
     private val viewModel: SearchViewModel by viewModels()
     lateinit var binding: FragmentSearchBinding
@@ -33,21 +31,18 @@ class SearchFragment : DialogFragment(R.layout.fragment_search),
         binding = FragmentSearchBinding.bind(view)
 
         binding.apply {
-            ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.periods,
-                android.R.layout.simple_dropdown_item_1line
-            ).also { ad ->
-                ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                searchPeriod.apply {
-                    adapter = ad
-                }
-            }
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, PERIODS)
+            (searchPeriodLayout.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+
+            clearSearch.setOnClickListener { viewModel.clear() }
 
             searchType.setOnCheckedChangeListener { group, checkedId ->
                 if (checkedId != -1) {
                     val chip: Chip = group.findViewById(checkedId)
                     viewModel.type = chip.text.toString()
+                } else {
+                    viewModel.type = ""
                 }
             }
 
@@ -56,6 +51,8 @@ class SearchFragment : DialogFragment(R.layout.fragment_search),
                 if (checkedId != -1) {
                     val chip: Chip = group.findViewById(checkedId)
                     viewModel.nbPhotos = chip.text.toString()
+                } else {
+                    viewModel.nbPhotos = ""
                 }
             }
 
@@ -64,36 +61,60 @@ class SearchFragment : DialogFragment(R.layout.fragment_search),
             searchMaxPrice.addTextChangedListener { viewModel.maxPrice = it.toString() }
             searchStatus.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.status = isChecked
-            } //TODO Rajouter un text
+            } //TODO Add a text
             searchMinSurface.addTextChangedListener { viewModel.minSurface = it.toString() }
             searchMaxSurface.addTextChangedListener { viewModel.maxSurface = it.toString() }
             searchNearest.addTextChangedListener { viewModel.nearest = it.toString() }
+            searchPeriodNumber.addTextChangedListener { viewModel.nbTime = it.toString() }
+            searchPeriodLayout.editText?.addTextChangedListener {
+                viewModel.unitTime = it.toString()
+            }
 
-            searchPeriodNumber.addTextChangedListener { viewModel.unit = it.toString() }
-            searchPeriod.onItemSelectedListener = this@SearchFragment
+            actionSearchQuery.setOnClickListener {
+                /*
+                searchMinPriceLayout.error = null
+                searchMaxPriceLayout.error = null
+                searchMinSurfaceLayout.error = null
+                searchMaxSurfaceLayout.error = null
+                searchPeriodLayout.error = null
+                searchPeriodNumberLayout.error = null
 
-            actionSearchQuery.setOnClickListener { viewModel.onSearchClick() }
+                 */
+                viewModel.onSearchClick()
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.searchEvents.collect { event ->
-                when(event) {
+                when (event) {
                     is SearchViewModel.SearchRealEstateEvent.ShowInvalidInputMessage -> {
-                        binding.apply {
-                            searchLocationLayout.error = event.msg
+                        when (event.error) {
+                            SearchViewModel.MESSAGE.MIN_PRICE -> {
+                                binding.searchMinPriceLayout.error = event.error.msg
+                            }
+                            SearchViewModel.MESSAGE.MAX_PRICE -> {
+                                binding.searchMaxPriceLayout.error = event.error.msg
+                            }
+                            SearchViewModel.MESSAGE.NUMBER_TIME -> {
+                                binding.searchPeriodNumberLayout.error = event.error.msg
+                            }
+                            SearchViewModel.MESSAGE.UNIT_TIME -> {
+                                binding.searchPeriodLayout.error = event.error.msg
+                            }
+                            SearchViewModel.MESSAGE.MIN_SURFACE -> {
+                                binding.searchMinSurfaceLayout.error = event.error.msg
+                            }
+                            SearchViewModel.MESSAGE.MAX_SURFACE -> {
+                                binding.searchMaxSurfaceLayout.error = event.error.msg
+                            }
                         }
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                     }
-                    is SearchViewModel.SearchRealEstateEvent.BackWithResult -> {
-                        //TODO()
-                        //dialog?.dismiss()
+
+                    is SearchViewModel.SearchRealEstateEvent.Empty -> {
                     }
                 }.exhaustive
             }
         }
-
-        viewModel.current.observe(viewLifecycleOwner) { Log.d(TAG, "onViewCreated Current: $it") }
-
     }
 
     override fun onStart() {
@@ -102,18 +123,6 @@ class SearchFragment : DialogFragment(R.layout.fragment_search),
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val periods = resources.getStringArray(R.array.periods)
-        val text = parent?.getItemAtPosition(position)
-        Log.d(TAG, "onItemSelected: ${periods[position]}")
-        Toast.makeText(requireContext(), "$text // $id", Toast.LENGTH_SHORT).show()
-        viewModel.time = text.toString()
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
     }
 
 }

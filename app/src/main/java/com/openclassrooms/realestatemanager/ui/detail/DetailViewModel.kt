@@ -3,10 +3,7 @@ package com.openclassrooms.realestatemanager.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.google.android.gms.maps.model.LatLng
-import com.openclassrooms.realestatemanager.repositories.GeocoderRepository
-import com.openclassrooms.realestatemanager.repositories.PhotoRepository
-import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
-import com.openclassrooms.realestatemanager.repositories.SharedRepository
+import com.openclassrooms.realestatemanager.repositories.*
 import com.openclassrooms.realestatemanager.utils.Constants.NO_REAL_ESTATE_ID
 import com.openclassrooms.realestatemanager.utils.Utils.formattedAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val sharedRepository: SharedRepository,
+    private val selectedIdRepository: SelectedIdRepository,
     private val realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
     private val geocoderRepository: GeocoderRepository
@@ -23,15 +20,14 @@ class DetailViewModel @Inject constructor(
 
     val uiModelLiveData = liveData {
         //sharedRepository.realEstateIdState.collect { id ->
-        val id = sharedRepository.getRealEstateId()
+        val id = selectedIdRepository.getRealEstateId()
             if (id != NO_REAL_ESTATE_ID) {
                 realEstateRepository.getRealEstate(id).collect { realEstate ->
                     photoRepository.getPhotos(realEstate.id).map { photos ->
                         val photosUiModel = photos.map {
                             PhotoUiModel(
-                                id = it.id.toString(),
-                                url = it.url,
-                                name = it.title
+                                bitmap = it.bitmap,
+                                title = it.title
                             )
                         }
 

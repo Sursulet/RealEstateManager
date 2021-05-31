@@ -14,7 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentDetailBinding
-import com.openclassrooms.realestatemanager.ui.edit.EditActivity
+import com.openclassrooms.realestatemanager.ui.addedit.AddEditActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,7 +43,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             }
 
             actionEdit?.setOnClickListener {
-                val intent = Intent(requireContext(), EditActivity::class.java)
+                val intent = Intent(requireContext(), AddEditActivity::class.java)
                 startActivity(intent)
             }
         }

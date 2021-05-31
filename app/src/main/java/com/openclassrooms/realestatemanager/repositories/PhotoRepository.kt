@@ -10,9 +10,9 @@ class PhotoRepository @Inject constructor(
     private val photoDao: PhotoDao
 ) {
 
-    fun getPhotos(realEstateId: Int) = photoDao.getPhotos(realEstateId)
+    fun getPhotos(realEstateId: Long) = photoDao.getPhotos(realEstateId)
     fun getAllPhotos() = photoDao.getAllPhotos()
-    fun getPhoto(realEstateId: Int) = photoDao.getPhoto(realEstateId)
+    fun getPhoto(realEstateId: Long) = photoDao.getPhoto(realEstateId)
     fun search(size: Int) = photoDao.search(size = size)
 
     //suspend fun insert(photo: Photo) { photoDao.insert(photo) }

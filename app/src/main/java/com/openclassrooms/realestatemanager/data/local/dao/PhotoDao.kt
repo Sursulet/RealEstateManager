@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 interface PhotoDao {
 
     @Query("SELECT * FROM photo WHERE realEstateId = :realEstateId")
-    fun getPhotos(realEstateId: Int): Flow<List<Photo>>
+    fun getPhotos(realEstateId: Long): Flow<List<Photo>>
 
     @Query("SELECT * FROM photo")
     fun getAllPhotos(): Flow<List<Photo>>
 
     @Query("SELECT * FROM photo WHERE realEstateId = :realEstateId LIMIT 1")
-    fun getPhoto(realEstateId: Int): Flow<Photo>
+    fun getPhoto(realEstateId: Long): Flow<Photo>
 
     @Query("SELECT COUNT(*) FROM photo GROUP BY realEstateId HAVING COUNT(*) <= :size")
     fun search(size: Int): Flow<List<Int>>

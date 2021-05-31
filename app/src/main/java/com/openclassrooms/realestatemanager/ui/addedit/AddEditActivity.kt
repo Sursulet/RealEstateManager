@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui.edit
+package com.openclassrooms.realestatemanager.ui.addedit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +9,7 @@ import com.openclassrooms.realestatemanager.databinding.ActivityEditBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditActivity : AppCompatActivity(), OnSaveClickListener {
+class AddEditActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditBinding
 
@@ -22,7 +22,7 @@ class EditActivity : AppCompatActivity(), OnSaveClickListener {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                replace(R.id.fragment_edit_container_view, EditFragment())
+                replace(R.id.fragment_edit_container_view, AddEditFragment())
             }
 
             supportFragmentManager.setFragmentResultListener("add_edit_request", this) { _, bundle ->
@@ -31,10 +31,5 @@ class EditActivity : AppCompatActivity(), OnSaveClickListener {
                 finish()
             }
         }
-    }
-
-    override fun onSaveClick() {
-        Log.d("PEACH", "onSaveClick: ACTIVITY ²")
-        finish()
     }
 }

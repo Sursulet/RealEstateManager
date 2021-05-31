@@ -1,15 +1,12 @@
 package com.openclassrooms.realestatemanager.ui.search
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
+import com.google.common.truth.Truth.assertThat
+import com.openclassrooms.realestatemanager.repositories.SearchQueryRepository
 import com.openclassrooms.realestatemanager.utilities.MainCoroutineRule
-import com.openclassrooms.realestatemanager.utilities.getValue
-import io.mockk.every
 import io.mockk.mockkClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
-
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 
@@ -24,14 +21,58 @@ class SearchViewModelUnitTest {
 
     private lateinit var viewModel: SearchViewModel
 
-    private val realEstateRepository = mockkClass(RealEstateRepository::class)
+    private val searchQueryRepository = mockkClass(SearchQueryRepository::class)
 
     @Before
     fun setUp() {
+        viewModel = SearchViewModel(searchQueryRepository)
     }
 
     @Test
-    fun test() {
-        val value = getValue(viewModel.current)
+    fun `insert minPrice with maxPrice empty` () {
+        viewModel.minPrice = "12"
+        viewModel.onSearchClick()
+        val error = SearchViewModel.SearchRealEstateEvent.ShowInvalidInputMessage(error = SearchViewModel.MESSAGE.MAX_PRICE)
+        assertThat(viewModel.searchEvents.value).isEqualTo(error)
+    }
+
+    @Test
+    fun `insert maxPrice with minPrice empty` () {
+        viewModel.maxPrice = "122"
+        viewModel.onSearchClick()
+        val error = SearchViewModel.SearchRealEstateEvent.ShowInvalidInputMessage(error = SearchViewModel.MESSAGE.MIN_PRICE)
+        assertThat(viewModel.searchEvents.value).isEqualTo(error)
+    }
+
+    @Test
+    fun `insert minSurface with maxSurface empty` () {
+        viewModel.minSurface = "12"
+        viewModel.onSearchClick()
+        val error = SearchViewModel.SearchRealEstateEvent.ShowInvalidInputMessage(error = SearchViewModel.MESSAGE.MAX_SURFACE)
+        assertThat(viewModel.searchEvents.value).isEqualTo(error)
+    }
+
+    @Test
+    fun `insert maxSurface with minSurface empty` () {
+        viewModel.maxSurface = "12"
+        viewModel.onSearchClick()
+        val error = SearchViewModel.SearchRealEstateEvent.ShowInvalidInputMessage(error = SearchViewModel.MESSAGE.MIN_SURFACE)
+        assertThat(viewModel.searchEvents.value).isEqualTo(error)
+    }
+
+    @Test
+    fun `insert numberTime with unitTime empty` () {
+        viewModel.nbTime = "12"
+        viewModel.onSearchClick()
+        val error = SearchViewModel.SearchRealEstateEvent.ShowInvalidInputMessage(error = SearchViewModel.MESSAGE.UNIT_TIME)
+        assertThat(viewModel.searchEvents.value).isEqualTo(error)
+    }
+
+    @Test
+    fun `insert unitTime with numberTime empty` () {
+        viewModel.unitTime = "12"
+        viewModel.onSearchClick()
+        val error = SearchViewModel.SearchRealEstateEvent.ShowInvalidInputMessage(error = SearchViewModel.MESSAGE.NUMBER_TIME)
+        assertThat(viewModel.searchEvents.value).isEqualTo(error)
     }
 }

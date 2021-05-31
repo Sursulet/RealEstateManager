@@ -12,7 +12,7 @@ object Constants {
     const val GOOGLE_API_URL = "real_estate_manager_db"
 
     const val REAL_ESTATE_ID_SAVED_STATE_KEY = "REAL_ESTATE_ID_SAVED_STATE_KEY"
-    const val NO_REAL_ESTATE_ID = -1
+    const val NO_REAL_ESTATE_ID: Long = -1
 
     const val PERMISSION_READ_KEY = 1001
     const val PERMISSION_WRITE_KEY = 1002
@@ -22,13 +22,27 @@ object Constants {
     const val CAMERA_PERMISSION_CODE = 1002
 
     const val REAL_ESTATE_SAVED_STATE_KEY = "REAL_ESTATE_SAVED_STATE_KEY"
-    val NO_REAL_ESTATE = RealEstate(type = "", city = "", price = 0F, surface = 0, rooms = 0, bathrooms = 0, bedrooms = 0, description = "", address = "", nearest = "", status = false, agent = "")
+    val NO_REAL_ESTATE = RealEstate(
+        type = "",
+        city = "",
+        price = 0F,
+        surface = 0,
+        rooms = 0,
+        bathrooms = 0,
+        bedrooms = 0,
+        description = "",
+        address = "",
+        nearest = "",
+        status = false,
+        agent = "",
+        saleTimestamp = null
+    )
 
     const val ADD_REAL_ESTATE_RESULT_OK = Activity.RESULT_FIRST_USER
     const val EDIT_REAL_ESTATE_RESULT_OK = Activity.RESULT_FIRST_USER + 1
 
-    val PERIODS = arrayOf("days", "weeks", "month", "years")
+    val PERIODS = listOf("", "days", "weeks", "month", "years")
 }
 
-enum class SearchQuery { BY_TYPE, BY_DATE }
-enum class SortOrder { BY_NAME, BY_DATE }
+//enum class SearchQuery { BY_TYPE, BY_DATE }
+//enum class SortOrder { BY_NAME, BY_DATE }
