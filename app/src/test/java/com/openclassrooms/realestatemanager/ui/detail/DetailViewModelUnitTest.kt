@@ -7,10 +7,7 @@ import com.openclassrooms.realestatemanager.data.geocoder.GeocoderResponse
 import com.openclassrooms.realestatemanager.data.geocoder.Geometry
 import com.openclassrooms.realestatemanager.data.geocoder.Location
 import com.openclassrooms.realestatemanager.data.geocoder.Result
-import com.openclassrooms.realestatemanager.repositories.GeocoderRepository
-import com.openclassrooms.realestatemanager.repositories.PhotoRepository
-import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
-import com.openclassrooms.realestatemanager.repositories.SelectedIdRepository
+import com.openclassrooms.realestatemanager.repositories.*
 import com.openclassrooms.realestatemanager.utilities.*
 import io.mockk.coEvery
 import io.mockk.every
@@ -33,7 +30,7 @@ class DetailViewModelUnitTest {
 
     private lateinit var viewModel: DetailViewModel
 
-    private val selectedIdRepository = mockkClass(SelectedIdRepository::class)
+    private val currentIdRepository = mockkClass(CurrentIdRepository::class)
     private val realEstateRepository = mockkClass(RealEstateRepository::class)
     private val photoRepository = mockkClass(PhotoRepository::class)
     private val geocoderRepository = mockkClass(GeocoderRepository::class)
@@ -42,13 +39,13 @@ class DetailViewModelUnitTest {
 
     @Before
     fun setUp() {
-        every { selectedIdRepository.getRealEstateId() } returns 1
+        every { currentIdRepository.getRealEstateId() } returns 1
         every { realEstateRepository.getRealEstate(1) } returns flowOf(realEstateA)
         every { photoRepository.getPhotos(1) } returns flowOf(testPhotos)
         coEvery { geocoderRepository.getCoordinates(realEstateA.address) } returns getDefaultGeocoderResponse()
 
         viewModel = DetailViewModel(
-            selectedIdRepository = selectedIdRepository,
+            currentIdRepository = currentIdRepository,
             realEstateRepository = realEstateRepository,
             photoRepository = photoRepository,
             geocoderRepository = geocoderRepository

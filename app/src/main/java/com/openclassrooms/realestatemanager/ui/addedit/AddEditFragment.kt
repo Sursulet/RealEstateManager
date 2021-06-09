@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentEditBinding
 import com.openclassrooms.realestatemanager.ui.addedit.addeditPhoto.AddEditPhotoDialog
@@ -17,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class AddEditFragment : Fragment(R.layout.fragment_edit), OnAddEditPhotoListener {
+class AddEditFragment : Fragment(R.layout.fragment_edit) {
 
     lateinit var binding: FragmentEditBinding
 
@@ -37,9 +38,11 @@ class AddEditFragment : Fragment(R.layout.fragment_edit), OnAddEditPhotoListener
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+
             viewModel.uiState.collect { uiState ->
-                when (uiState) {
-                    is AddEditViewModel.AddEditUiState.UiModel -> {
+                when(uiState) {
+                    AddEditViewModel.AddEditUiState.Empty -> {}
+                    is AddEditViewModel.AddEditUiState.Content -> {
                         binding.apply {
                             photosAdapter.submitList(uiState.uiModel.photos)
                             editType.setText(uiState.uiModel.type)
@@ -58,6 +61,9 @@ class AddEditFragment : Fragment(R.layout.fragment_edit), OnAddEditPhotoListener
                     }
 
                     is AddEditViewModel.AddEditUiState.ShowInvalidInputMessage -> {
+                        if (uiState.photosError != null) {
+                            Snackbar.make(requireView(), uiState.photosError, Snackbar.LENGTH_SHORT).show()
+                        }
                         binding.apply{
                             editLayoutType.error = uiState.typeError
                             editLayoutAddress.error = uiState.addressError
@@ -66,17 +72,28 @@ class AddEditFragment : Fragment(R.layout.fragment_edit), OnAddEditPhotoListener
                             editLayoutAgent.error = uiState.agentError
                         }
                     }
-                    AddEditViewModel.AddEditUiState.Success -> TODO()
-                    else -> Unit
+
+                    is AddEditViewModel.AddEditUiState.Success -> {
+                        Snackbar.make(requireView(), uiState.msg, Snackbar.LENGTH_SHORT).show()
+                        activity?.onBackPressed()
+                    }
                 }
             }
-
         }
 
         binding.apply {
             editType.addTextChangedListener { viewModel.realEstateType = it.toString() }
             editPrice.addTextChangedListener { viewModel.realEstatePrice = it.toString() }
+            editAddress.addTextChangedListener { viewModel.realEstateAddress = it.toString() }
+            editCity.addTextChangedListener { viewModel.realEstateCity = it.toString() }
+            editState.addTextChangedListener { viewModel.realEstateState = it.toString() }
+            editDesc.addTextChangedListener { viewModel.realEstateDesc = it.toString() }
+            editNearest.addTextChangedListener { viewModel.realEstateNearest = it.toString() }
             editSurface.addTextChangedListener { viewModel.realEstateSurface = it.toString() }
+            editRooms.addTextChangedListener { viewModel.realEstateRooms = it.toString() }
+            editBathrooms.addTextChangedListener { viewModel.realEstateBathrooms = it.toString() }
+            editBedrooms.addTextChangedListener { viewModel.realEstateBedrooms = it.toString() }
+            editAgent.addTextChangedListener { viewModel.realEstateAgent = it.toString() }
 
             onAddEditPhoto.setOnClickListener {
                 val addEditPhotoDialog = AddEditPhotoDialog()
@@ -85,15 +102,11 @@ class AddEditFragment : Fragment(R.layout.fragment_edit), OnAddEditPhotoListener
 
             actionSave.setOnClickListener { viewModel.onSaveClick() }
         }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.clear()
-    }
-
-    override fun onSavePhotoClick(photoUiModel: PhotoUiModel) {
-        viewModel.onAddEditPhoto(photoUiModel)
-        //viewModel.updateUiModel()
     }
 }

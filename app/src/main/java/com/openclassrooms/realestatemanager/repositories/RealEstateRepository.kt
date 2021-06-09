@@ -1,11 +1,7 @@
 package com.openclassrooms.realestatemanager.repositories
 
-import android.database.Cursor
-import android.util.Log
-import androidx.room.Query
-import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
+import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,9 +16,7 @@ class RealEstateRepository @Inject constructor(
     fun getRealEstate(realEstateId: Long) = realEstateDao.getRealEstate(realEstateId)
 
     suspend fun insert(realEstate: RealEstate): Long {
-        val id = realEstateDao.insert(realEstate)
-        Log.d(TAG, "insert: $id")
-        return id
+        return realEstateDao.insert(realEstate)
     }
 
     suspend fun update(realEstate: RealEstate) {

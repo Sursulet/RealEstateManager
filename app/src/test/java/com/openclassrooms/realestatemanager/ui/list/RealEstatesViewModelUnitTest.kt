@@ -33,7 +33,7 @@ class RealEstatesViewModelUnitTest {
     private lateinit var viewModel: RealEstatesViewModel
 
     private var twoPaneRepository = mockk<TwoPaneRepository>()
-    private var selectedIdRepository = mockk<SelectedIdRepository>()
+    private var currentIdRepository = mockk<CurrentIdRepository>()
     private var realEstatesRepository = mockk<RealEstateRepository>()
     private var photoRepository = mockk<PhotoRepository>()
     private var searchQueryRepository = mockk<SearchQueryRepository>()
@@ -74,7 +74,7 @@ class RealEstatesViewModelUnitTest {
 
         viewModel = RealEstatesViewModel(
             twoPaneRepository = twoPaneRepository,
-            selectedIdRepository = selectedIdRepository,
+            currentIdRepository = currentIdRepository,
             realEstateRepository = realEstatesRepository,
             photoRepository = photoRepository,
             searchQueryRepository = searchQueryRepository,
@@ -101,7 +101,7 @@ class RealEstatesViewModelUnitTest {
             photoRepository.getPhoto(2)
             photoRepository.getPhoto(3)
         }
-        confirmVerified(realEstatesRepository, photoRepository, selectedIdRepository)
+        confirmVerified(realEstatesRepository, photoRepository, currentIdRepository)
     }
 
     @Test

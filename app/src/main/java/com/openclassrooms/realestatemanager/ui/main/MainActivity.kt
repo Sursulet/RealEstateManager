@@ -16,6 +16,10 @@ import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
 import com.openclassrooms.realestatemanager.ui.list.OnRealEstateClickListener
 import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
+import com.openclassrooms.realestatemanager.ui.loan.LoanActivity
+import com.openclassrooms.realestatemanager.ui.loan.LoanFragment
+import com.openclassrooms.realestatemanager.ui.map.MapActivity
+import com.openclassrooms.realestatemanager.ui.map.MapFragment
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -100,9 +104,42 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
 
                 true
             }
+
             R.id.action_search -> {
                 val dialog = SearchFragment()
                 dialog.show(supportFragmentManager, "searchDialog")
+                true
+            }
+
+            R.id.map -> {
+                if(twoPane) {
+                    supportFragmentManager.commit {
+                        setReorderingAllowed(true)
+                        replace(
+                            R.id.fragment_container_flow,
+                            MapFragment()
+                        )
+                    }
+                } else {
+                    val intent = Intent(this, MapActivity::class.java)
+                    startActivity(intent)
+                }
+                true
+            }
+
+            R.id.action_loan -> {
+                if(twoPane) {
+                    supportFragmentManager.commit {
+                        setReorderingAllowed(true)
+                        replace(
+                            R.id.fragment_container_flow,
+                            LoanFragment()
+                        )
+                    }
+                } else {
+                    val intent = Intent(this, LoanActivity::class.java)
+                    startActivity(intent)
+                }
                 true
             }
 

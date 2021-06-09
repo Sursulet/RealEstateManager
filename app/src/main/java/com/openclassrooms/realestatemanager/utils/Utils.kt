@@ -6,9 +6,7 @@ import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.net.wifi.WifiManager
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -17,7 +15,10 @@ import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.math.acos
+import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -90,21 +91,17 @@ object Utils {
                 val address: Address = addresses[0]
                 val lat: Double = address.latitude
                 val lng: Double = address.longitude
-                Log.d("PEACH", "geoLocate: $lat $lng")
+
                 latLng = LatLng(lat, lng)
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            Log.d("PEACH", "Could not get address..!")
         }
-
-        Log.d("PEACH", "getCoordinates: $latLng")
 
         return latLng
     }
 
     fun calculatePeriod(number: Long, time: String): LocalDate {
-        Log.d(TAG, "calculatePeriod: ")
         lateinit var period: LocalDate
         val date = LocalDate.now()
 
@@ -125,5 +122,26 @@ object Utils {
         connection.connect()
         val input: InputStream = connection.inputStream
         return BitmapFactory.decodeStream(input)
+    }
+
+    fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val theta = lon1 - lon2
+        var dist = (sin(deg2rad(lat1))
+                * sin(deg2rad(lat2))
+                + (cos(deg2rad(lat1))
+                * cos(deg2rad(lat2))
+                * cos(deg2rad(theta))))
+        dist = acos(dist)
+        dist = rad2deg(dist)
+        dist *= 60 * 1.1515
+        return dist
+    }
+
+    private fun deg2rad(deg: Double): Double {
+        return deg * Math.PI / 180.0
+    }
+
+    private fun rad2deg(rad: Double): Double {
+        return rad * 180.0 / Math.PI
     }
 }

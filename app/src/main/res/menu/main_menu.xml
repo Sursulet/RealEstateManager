@@ -20,4 +20,14 @@
         android:title="Search Real Estate"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/map"
+        android:title="Map"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_loan"
+        android:title="Loan"
+        app:showAsAction="never" />
+
 </menu>

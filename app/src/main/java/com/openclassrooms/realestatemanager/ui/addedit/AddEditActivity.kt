@@ -24,12 +24,6 @@ class AddEditActivity : AppCompatActivity() {
                 setReorderingAllowed(true)
                 replace(R.id.fragment_edit_container_view, AddEditFragment())
             }
-
-            supportFragmentManager.setFragmentResultListener("add_edit_request", this) { _, bundle ->
-                val result = bundle.getInt("add_edit_result")
-                Log.d("PEACH", "onCreate: $result")
-                finish()
-            }
         }
     }
 }

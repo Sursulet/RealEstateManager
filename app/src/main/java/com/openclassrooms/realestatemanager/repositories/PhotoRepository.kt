@@ -15,8 +15,8 @@ class PhotoRepository @Inject constructor(
     fun getPhoto(realEstateId: Long) = photoDao.getPhoto(realEstateId)
     fun search(size: Int) = photoDao.search(size = size)
 
-    //suspend fun insert(photo: Photo) { photoDao.insert(photo) }
-    suspend fun insertPhotos(photos: List<Photo>) { photoDao.insertPhotos(photos) }
+    suspend fun insertPhoto(photo: Photo) { photoDao.insertPhoto(photo) }
+    //suspend fun insertPhotos(photos: List<Photo>) { photoDao.insertPhotos(photos) }
     suspend fun update(photo: Photo) { photoDao.update(photo) }
     suspend fun delete(photo: Photo) { photoDao.delete(photo) }
 }

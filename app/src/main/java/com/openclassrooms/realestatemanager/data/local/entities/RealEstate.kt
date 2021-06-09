@@ -20,6 +20,8 @@ data class RealEstate(
     var bedrooms: Int?,
     var description: String,
     var address: String,
+    //var lat: Double,
+    //var lon: Double,
     var nearest: String, //NEAREST
     var status: Boolean = false,
     val created: LocalDate = LocalDate.now(),

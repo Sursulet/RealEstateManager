@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RealEstatesFragment : Fragment(R.layout.fragment_real_estates), OnRealEstateClickListener, OnSearchClickListener {
+class RealEstatesFragment : Fragment(R.layout.fragment_real_estates), OnRealEstateClickListener {
 
     private lateinit var realEstateClickListener: OnRealEstateClickListener
 
@@ -60,10 +60,6 @@ class RealEstatesFragment : Fragment(R.layout.fragment_real_estates), OnRealEsta
     override fun onRealEstateClick(id: Long) {
         viewModel.onRealEstateSelected(id)
         realEstateClickListener.onRealEstateClick(id)
-    }
-
-    override fun onSearchClick(searchQuery: SearchQuery) {
-        Log.d(TAG, "onSearchClick: REAL REEL")
     }
 
 }

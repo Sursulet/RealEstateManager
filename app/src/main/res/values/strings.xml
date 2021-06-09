@@ -46,12 +46,17 @@
     <string name="photo_title">Add Title</string>
     <string name="add_a_photo_from_camera">ADD A PHOTO FROM CAMERA</string>
     <string name="add_a_photo_from_gallery">ADD A PHOTO FROM GALLERY</string>
-    <string name="action_cancel">CANCEL</string>
+    <string name="action_cancel">Cancel</string>
     <string name="action_add">ADD</string>
     <string name="cancel_current_search">Cancel current search</string>
     <string name="empty_text" />
     <string name="default_photo">default_photo</string>
     <string name="desc_btn_add_photo">Desc btn add photo</string>
+    <string name="calculate">Calculate</string>
+    <string name="loan_contribution">Contribution</string>
+    <string name="loan_years">Years</string>
+    <string name="loan_rate">Rate</string>
+    <string name="loan_title">Real Estate Loan</string>
 
     <string-array name="periods">
         <item> </item>

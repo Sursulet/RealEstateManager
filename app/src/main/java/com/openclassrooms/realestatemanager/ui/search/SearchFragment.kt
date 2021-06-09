@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
@@ -14,7 +13,6 @@ import com.google.android.material.chip.Chip
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentSearchBinding
 import com.openclassrooms.realestatemanager.utils.Constants.PERIODS
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import com.openclassrooms.realestatemanager.utils.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -47,7 +45,6 @@ class SearchFragment : DialogFragment(R.layout.fragment_search) {
             }
 
             searchPhotos.setOnCheckedChangeListener { group, checkedId ->
-                Log.d(TAG, "SIZE: $checkedId")
                 if (checkedId != -1) {
                     val chip: Chip = group.findViewById(checkedId)
                     viewModel.nbPhotos = chip.text.toString()

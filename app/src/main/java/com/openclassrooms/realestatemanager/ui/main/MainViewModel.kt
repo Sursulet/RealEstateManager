@@ -2,7 +2,7 @@ package com.openclassrooms.realestatemanager.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.realestatemanager.repositories.SelectedIdRepository
+import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
 import com.openclassrooms.realestatemanager.repositories.TwoPaneRepository
 import com.openclassrooms.realestatemanager.utils.Constants.ADD_REAL_ESTATE_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,16 +11,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val selectedIdRepository: SelectedIdRepository,
+    private val currentIdRepository: CurrentIdRepository,
     private val twoPaneRepository: TwoPaneRepository
 ) : ViewModel() {
 
     fun onAddNewRealEstateClick() {
-        selectedIdRepository.onAddEvent()
+        currentIdRepository.onAddEvent()
     }
 
     fun onEditRealEstateClick() {
-        selectedIdRepository.onEditEvent()
+        currentIdRepository.onEditEvent()
     }
 
     fun onAddResult(result: Int) {

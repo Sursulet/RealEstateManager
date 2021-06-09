@@ -71,8 +71,6 @@ class AddEditPhotoDialog : DialogFragment(R.layout.dialog_add_edit_photo) {
             }
             actionCancel.setOnClickListener { dismiss() }
             actionOk.setOnClickListener {
-                Log.d("PEACH", "onViewCreated: Click on OK")
-                //val title: String
                 viewModel.onSaveClick()
             }
         }
@@ -95,8 +93,6 @@ class AddEditPhotoDialog : DialogFragment(R.layout.dialog_add_edit_photo) {
                         }
                     }
                     is AddEditPhotoViewModel.AddEditPhotoUiState.NavigateBackResult -> {
-                        Log.d(TAG, "onViewCreated: OK OK")
-                        //listener.onSavePhotoClick(state.result)
                         dismiss()
                     }
                     else -> Unit

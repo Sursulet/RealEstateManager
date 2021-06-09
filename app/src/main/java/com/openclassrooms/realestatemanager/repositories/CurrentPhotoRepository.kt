@@ -9,12 +9,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AddEditPhotoRepository @Inject constructor() {
+class CurrentPhotoRepository @Inject constructor() {
     private val _photo = MutableStateFlow<List<PhotoUiModel>>(emptyList())
     val photo = _photo.asStateFlow()
 
     fun setValue(photoUiModel: PhotoUiModel) {
-        Log.d(TAG, "setValue: $photoUiModel")
         _photo.value = listOf(photoUiModel)
     }
 

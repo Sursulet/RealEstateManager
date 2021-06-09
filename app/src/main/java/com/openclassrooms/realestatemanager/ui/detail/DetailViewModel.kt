@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val selectedIdRepository: SelectedIdRepository,
+    private val currentIdRepository: CurrentIdRepository,
     private val realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
     private val geocoderRepository: GeocoderRepository
@@ -20,8 +20,8 @@ class DetailViewModel @Inject constructor(
 
     val uiModelLiveData = liveData {
         //sharedRepository.realEstateIdState.collect { id ->
-        val id = selectedIdRepository.getRealEstateId()
-            if (id != NO_REAL_ESTATE_ID) {
+        val id = currentIdRepository.getRealEstateId()
+            if (id != null) {
                 realEstateRepository.getRealEstate(id).collect { realEstate ->
                     photoRepository.getPhotos(realEstate.id).map { photos ->
                         val photosUiModel = photos.map {

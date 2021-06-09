@@ -1,188 +1,107 @@
 package com.openclassrooms.realestatemanager.ui.addedit
 
 import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
-import com.openclassrooms.realestatemanager.repositories.AddEditPhotoRepository
+import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
+import com.openclassrooms.realestatemanager.repositories.CurrentPhotoRepository
 import com.openclassrooms.realestatemanager.repositories.PhotoRepository
 import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
-import com.openclassrooms.realestatemanager.repositories.SelectedIdRepository
 import com.openclassrooms.realestatemanager.ui.detail.PhotoUiModel
-import com.openclassrooms.realestatemanager.utils.Constants.NO_REAL_ESTATE_ID
 import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
-    selectedIdRepository: SelectedIdRepository,
+    currentIdRepository: CurrentIdRepository,
     private val realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
-    private val addEditPhotoRepository: AddEditPhotoRepository,
-    private val stateHandle: SavedStateHandle
+    private val currentPhotoRepository: CurrentPhotoRepository
 ) : ViewModel() {
 
-
-    private val _uiState = MutableStateFlow<AddEditUiState>(AddEditUiState.Empty)
-    val uiState = _uiState.asStateFlow()
+    private val realEstateId = currentIdRepository.currentId.value
+    private val newPhoto = currentPhotoRepository.photo
 
     private val _realEstate = MutableStateFlow<RealEstate?>(null)
-    val realEstate = _realEstate.asStateFlow()
+    private val realEstate = _realEstate.asStateFlow()
 
-    private var _photos = MutableStateFlow<List<Photo>>(listOf())
-    val photos = _photos.asStateFlow()
+    private var _uiPhotos = MutableStateFlow<List<PhotoUiModel>>(listOf())
+    private val uiPhotos = _uiPhotos.asStateFlow()
 
-    private var _photosUiModel = MutableStateFlow<List<PhotoUiModel>>(listOf())
-    private val photosUiModel = _photosUiModel.asStateFlow()
+    private val _uiState = MutableStateFlow<AddEditUiState>(AddEditUiState.Empty) //Content
+    val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            val selectedId = selectedIdRepository.selectedId
-            val newPhoto = addEditPhotoRepository.photo
+        viewModelScope.launch {
+            _realEstate.value =
+                realEstateId?.let { id -> realEstateRepository.getRealEstate(id).first() }
 
-            combine(selectedId, newPhoto) { id, photo ->
-                if (id == NO_REAL_ESTATE_ID) {
-
-                    _photosUiModel.value = _photosUiModel.value + photo
-                    Log.d(TAG, "NEW Ad: ${photosUiModel.value}")
-                    //_uiState.value =
-                        AddEditUiState.UiModel(AddEditUiModel(photos = photosUiModel.value))
-
+            _realEstate.combine(newPhoto) { estate, newPhoto ->
+                val photos = if (estate?.id != null) {
+                    photoRepository.getPhotos(estate.id).first()
                 } else {
-                    val estate = realEstateRepository.getRealEstate(id).first()
-                    val photos = photoRepository.getPhotos(id).first()
-
-                    _photosUiModel.value = _photosUiModel.value + photo
-                    Log.d(TAG, "NEW Ed: ${photosUiModel.value}")
-
-                    val uiModel = AddEditUiModel(
-                        photos = photos.map {
-                            PhotoUiModel(
-                                it.id,
-                                it.bitmap,
-                                it.title
-                            )
-                        } + photosUiModel.value,
-                        type = stateHandle.get<String>("addEditType") ?: estate.type,
-                        price = stateHandle.get<String>("addEditPrice") ?: estate.price.toString(),
-                        address = stateHandle.get<String>("addEditAddress") ?: estate.address,
-                        city = stateHandle.get<String>("addEditCity") ?: estate.city,
-                        state = stateHandle.get<String>("addEditState") ?: estate.city,
-                        nearest = stateHandle.get<String>("addEditNearest") ?: estate.nearest,
-                        description = stateHandle.get<String>("addEditDesc") ?: estate.description,
-                        surface = stateHandle.get<String>("addEditSurface")
-                            ?: estate.surface.toString(),
-                        rooms = stateHandle.get<String>("addEditRooms") ?: estate.rooms.toString(),
-                        bathrooms = stateHandle.get<String>("addEditBath")
-                            ?: estate.bathrooms.toString(),
-                        bedrooms = stateHandle.get<String>("addEditBed")
-                            ?: estate.bedrooms.toString(),
-                        status = stateHandle.get<Boolean>("addEditStatus") ?: estate.status,
-                        agent = stateHandle.get<String>("addEditAgent") ?: estate.agent
-                    )
-
-                    //_uiState.value =
-                        AddEditUiState.UiModel(uiModel = uiModel)
-
+                    emptyList()
                 }
+
+                _uiPhotos.value = _uiPhotos.value + newPhoto
+
+                val uiPhotos = photos.map {
+                    PhotoUiModel(
+                        it.id,
+                        it.bitmap,
+                        it.title
+                    )
+                } + _uiPhotos.value
+
+                AddEditUiModel(
+                    photos = uiPhotos,
+                    type = estate?.type ?: "",
+                    price = estate?.price?.toString() ?: "",
+                    address = estate?.address ?: "",
+                    city = estate?.city ?: "",
+                    state = estate?.city ?: "",
+                    nearest = estate?.nearest ?: "",
+                    description = estate?.description ?: "",
+                    surface = estate?.surface?.toString() ?: "",
+                    rooms = estate?.rooms?.toString() ?: "",
+                    bathrooms = estate?.bathrooms?.toString() ?: "",
+                    bedrooms = estate?.bedrooms?.toString() ?: "",
+                    status = estate?.status ?: false,
+                    agent = estate?.agent ?: ""
+                )
             }.collect {
-                _uiState.value = it
+                _uiState.value = AddEditUiState.Content(it)
             }
         }
     }
 
-    //var realEstatePhotos = emptyList<Photo>()
     var realEstateType: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditType"] = value
-        }
-
     var realEstatePrice: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditPrice"] = value
-        }
-
     var realEstateAddress: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditAddress"] = value
-        }
-
     var realEstateCity: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditCity"] = value
-        }
     var realEstateState: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditState"] = value
-        }
     var realEstateAgent: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditAgent"] = value
-        }
     var realEstateDesc: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditDesc"] = value
-        }
     var realEstateSurface: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditSurface"] = value
-        }
     var realEstateRooms: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditRooms"] = value
-        }
     var realEstateBedrooms: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditBed"] = value
-        }
     var realEstateBathrooms: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditBath"] = value
-        }
     var realEstateNearest: String = ""
-        set(value) {
-            field = value
-            stateHandle["addEditNearest"] = value
-        }
     var saleTimestamp = null
-        set(value) {
-            field = value
-            stateHandle["addEditTimestamp"] = value
-        }
     var realEstateStatus: Boolean = false
-        set(value) {
-            field = value
-            stateHandle["addEditStatus"] = value
-        }
-
-    fun onAddEditPhoto(photoUiModel: PhotoUiModel) {
-        val b = _photosUiModel.value.contains(photoUiModel)
-        Log.d(TAG, "onAddEditPhoto: $photoUiModel // $b")
-        _photosUiModel.value = _photosUiModel.value + listOf(photoUiModel)
-    }
 
     fun onSaveClick() {
-
-        //Verify
         var hasError = false
         val errorState = AddEditUiState.ShowInvalidInputMessage(
+            photosError = if (realEstateId == null && uiPhotos.value.isEmpty()) {
+                hasError = true
+                "Add one photo"
+            } else null,
             typeError = if (realEstateType.isBlank()) {
                 hasError = true
                 "type is empty "
@@ -207,12 +126,28 @@ class AddEditViewModel @Inject constructor(
         )
 
         if (hasError) {
-            setErrorMessage(errorState)
+            _uiState.value = errorState
             return
         }
+        
+        if (realEstateId != null) {
+            val updateRealEstate = realEstate.value!!.copy(
+                type = realEstateType,
+                description = realEstateDesc,
+                city = realEstateCity,
+                price = realEstatePrice.toFloatOrNull(),
+                surface = realEstateSurface.toInt(),
+                rooms = realEstateRooms.toIntOrNull(),
+                bedrooms = realEstateBedrooms.toIntOrNull(),
+                bathrooms = realEstateBathrooms.toIntOrNull(),
+                address = "$realEstateAddress, $realEstateCity, $realEstateState",
+                nearest = realEstateNearest,
+                saleTimestamp = saleTimestamp,
+                agent = realEstateAgent
+            )
 
-
-        if (selectedId.value == NO_REAL_ESTATE_ID) {
+            updateRealEstate(updateRealEstate)
+        } else {
             val newRealEstate = RealEstate(
                 type = realEstateType,
                 description = realEstateDesc,
@@ -229,35 +164,40 @@ class AddEditViewModel @Inject constructor(
             )
 
             createRealEstate(newRealEstate)
-        } else {
-            val updateRealEstate = realEstate.value.copy()
         }
     }
+
+    private fun updateRealEstate(realEstate: RealEstate) =
+        viewModelScope.launch {
+            realEstateRepository.update(realEstate)
+            createPhotos(realEstate.id, uiPhotos.value)
+
+            _uiState.value = AddEditUiState.Success("RealEstate is update")
+        }
 
     private fun createRealEstate(realEstate: RealEstate) =
         viewModelScope.launch {
             val newRealEstateId = realEstateRepository.insert(realEstate)
-            Log.d(TAG, "createRealEstate: $newRealEstateId")
-            val newPhotos = photosUiModel.value.map {
-                Photo(title = it.title, bitmap = it.bitmap, realEstateId = newRealEstateId)
-            }
-            photoRepository.insertPhotos(newPhotos)
-            _uiState.value = AddEditUiState.Success
-            //_addEditEvent.emit(AddEditRealEstateEvent.NavigateBackResult(Constants.ADD_REAL_ESTATE_RESULT_OK))
+            createPhotos(newRealEstateId, uiPhotos.value)
+            _uiState.value = AddEditUiState.Success("RealEstate is add")
         }
 
-    private fun setErrorMessage(errorState: AddEditUiState.ShowInvalidInputMessage) {
-        _uiState.value = errorState
+    private fun createPhotos(id: Long, photos: List<PhotoUiModel>) = viewModelScope.launch {
+        photos.map {
+            val photo = Photo(title = it.title,bitmap = it.bitmap,realEstateId = id)
+            photoRepository.insertPhoto(photo)
+        }
     }
 
     fun clear() {
-        addEditPhotoRepository.clear()
+        currentPhotoRepository.clear()
     }
 
     sealed class AddEditUiState {
         object Empty : AddEditUiState()
-        data class UiModel(val uiModel: AddEditUiModel) : AddEditUiState()
+        data class Content(val uiModel: AddEditUiModel) : AddEditUiState()
         data class ShowInvalidInputMessage(
+            val photosError: String?,
             val typeError: String?,
             val addressError: String?,
             val priceError: String?,
@@ -265,6 +205,6 @@ class AddEditViewModel @Inject constructor(
             val agentError: String?
         ) : AddEditUiState()
 
-        object Success : AddEditUiState()
+        data class Success(val msg: String) : AddEditUiState()
     }
 }

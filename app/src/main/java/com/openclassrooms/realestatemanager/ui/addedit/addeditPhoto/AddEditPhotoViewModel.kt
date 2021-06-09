@@ -3,8 +3,7 @@ package com.openclassrooms.realestatemanager.ui.addedit.addeditPhoto
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.openclassrooms.realestatemanager.data.local.entities.Photo
-import com.openclassrooms.realestatemanager.repositories.AddEditPhotoRepository
+import com.openclassrooms.realestatemanager.repositories.CurrentPhotoRepository
 import com.openclassrooms.realestatemanager.ui.detail.PhotoUiModel
 import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditPhotoViewModel @Inject constructor(
-    private val addEditPhotoRepository: AddEditPhotoRepository
+    private val currentPhotoRepository: CurrentPhotoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AddEditPhotoUiState>(AddEditPhotoUiState.Add)
@@ -31,7 +30,6 @@ class AddEditPhotoViewModel @Inject constructor(
             return
         }
 
-        Log.d(TAG, "onSaveClick: $photo")
         if (photo == null) {
             //showInvalidInputMessage("onSaveClick: Type cannot be empty")
             showInvalidInputMessage(ErrorMessage.PHOTO)
@@ -44,7 +42,7 @@ class AddEditPhotoViewModel @Inject constructor(
 
     fun addPhoto(photoUiModel: PhotoUiModel) {
         _uiState.value = AddEditPhotoUiState.NavigateBackResult(photoUiModel)
-        addEditPhotoRepository.setValue(photoUiModel)
+        currentPhotoRepository.setValue(photoUiModel)
     }
 
     private fun showInvalidInputMessage(message: ErrorMessage) {

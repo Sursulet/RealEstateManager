@@ -20,6 +20,9 @@ interface PhotoDao {
     fun search(size: Int): Flow<List<Int>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPhoto(photo: Photo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPhotos(photos: List<Photo>)
 
     @Update

@@ -19,12 +19,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RealEstatesViewModel @Inject constructor(
-    private val twoPaneRepository: TwoPaneRepository,
-    private val selectedIdRepository: SelectedIdRepository,
+    twoPaneRepository: TwoPaneRepository,
+    private val currentIdRepository: CurrentIdRepository,
     realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
     searchQueryRepository: SearchQueryRepository,
-    private val coroutineDispatchers: CoroutinesDispatchers
+    coroutineDispatchers: CoroutinesDispatchers
 ) : ViewModel() {
 
     private val twoPane = twoPaneRepository.twoPane
@@ -101,7 +101,7 @@ class RealEstatesViewModel @Inject constructor(
 
     fun onRealEstateSelected(realEstateId: Long) {
         _selectedId.value = realEstateId
-        selectedIdRepository.setRealEstateId(realEstateId)
+        currentIdRepository.setRealEstateId(realEstateId)
     }
 
     data class Wrapper(
