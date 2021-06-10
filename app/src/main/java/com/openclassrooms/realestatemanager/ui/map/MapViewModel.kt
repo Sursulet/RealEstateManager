@@ -1,16 +1,11 @@
 package com.openclassrooms.realestatemanager.ui.map
 
-import android.Manifest
-import android.content.Context
-import android.os.Build
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.openclassrooms.realestatemanager.repositories.CurrentLocationRepository
 import com.openclassrooms.realestatemanager.repositories.GeocoderRepository
 import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import com.openclassrooms.realestatemanager.utils.Utils.getDistance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import pub.devrel.easypermissions.EasyPermissions
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,7 +33,6 @@ class MapViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            Log.d(TAG, "LAST: ${currentLocation.value}")
             //Get all realEstate whose distance is less than 500
             realEstates.combine(currentLocation) { estates, lastLocation ->
                 estates.mapNotNull { realEstate ->

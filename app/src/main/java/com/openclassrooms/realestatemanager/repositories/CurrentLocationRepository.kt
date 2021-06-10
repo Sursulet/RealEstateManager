@@ -1,65 +1,56 @@
 package com.openclassrooms.realestatemanager.repositories
 
 import android.app.Application
-import android.content.Context
 import android.location.Location
 import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CurrentLocationRepository @Inject constructor(
-    //val context: Context
-    ) {
+    val application: Application
+) {
 
-    private val _lastLocationUpdates: MutableStateFlow<Location> = MutableStateFlow(Location(""))
-    val lastLocationUpdates = _lastLocationUpdates.asStateFlow()
+    private val _lastLocationUpdates: MutableStateFlow<Location?> = MutableStateFlow(null)
+    val lastLocationUpdates : Flow<Location> = _lastLocationUpdates.filterNotNull()
 
-    private var isUpdate: Boolean = false
+    private var isInitialized = AtomicBoolean(false)
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
+    private val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
 
-    private fun buildLocationRequest() {
-        locationRequest = LocationRequest.create()
-            .setInterval(10_000)
-            .setFastestInterval(5_000)
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-    }
-
-    private fun buildLocationCallback() {
-        locationCallback = object : LocationCallback() {
+    private val locationCallback: LocationCallback by lazy {
+        object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
                 _lastLocationUpdates.value = locationResult.lastLocation
             }
         }
     }
 
-    private fun startLocationUpdates() {
-        if(!isUpdate){
-            isUpdate = true
-            //fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
+    fun startLocationUpdates() {
+        if (isInitialized.compareAndSet(false, true)) {
             try {
                 fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
+                    LocationRequest.create()
+                        .setInterval(10_000)
+                        .setFastestInterval(5_000)
+                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY),
                     locationCallback,
                     Looper.getMainLooper()
                 )
             } catch (e: SecurityException) {
-                Log.e("Exception %s: ", e.message!!)
+                e.printStackTrace()
             }
         }
     }
 
-    private fun stopLocationUpdates() {
-        isUpdate = false
+    fun stopLocationUpdates() {
+        isInitialized.set(false)
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 }

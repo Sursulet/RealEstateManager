@@ -12,7 +12,7 @@ android {
         applicationId "com.openclassrooms.realestatemanager"
         buildConfigField "String", "GOOGLE_MAPS_KEY", realEstateManager_mapsapikey
         resValue 'string', 'google_maps_key', realEstateManager_mapsapikey
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
