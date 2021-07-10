@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.addedit
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
@@ -10,7 +9,6 @@ import com.openclassrooms.realestatemanager.repositories.CurrentPhotoRepository
 import com.openclassrooms.realestatemanager.repositories.PhotoRepository
 import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
 import com.openclassrooms.realestatemanager.ui.detail.PhotoUiModel
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -28,10 +26,8 @@ class AddEditViewModel @Inject constructor(
     private val newPhoto = currentPhotoRepository.photo
 
     private val _realEstate = MutableStateFlow<RealEstate?>(null)
-    private val realEstate = _realEstate.asStateFlow()
 
     private var _uiPhotos = MutableStateFlow<List<PhotoUiModel>>(listOf())
-    private val uiPhotos = _uiPhotos.asStateFlow()
 
     private val _uiState = MutableStateFlow<AddEditUiState>(AddEditUiState.Empty) //Content
     val uiState = _uiState.asStateFlow()
@@ -98,7 +94,7 @@ class AddEditViewModel @Inject constructor(
     fun onSaveClick() {
         var hasError = false
         val errorState = AddEditUiState.ShowInvalidInputMessage(
-            photosError = if (realEstateId == null && uiPhotos.value.isEmpty()) {
+            photosError = if (realEstateId == null && _uiPhotos.value.isEmpty()) {
                 hasError = true
                 "Add one photo"
             } else null,
@@ -131,7 +127,7 @@ class AddEditViewModel @Inject constructor(
         }
         
         if (realEstateId != null) {
-            val updateRealEstate = realEstate.value!!.copy(
+            val updateRealEstate = _realEstate.value!!.copy(
                 type = realEstateType,
                 description = realEstateDesc,
                 city = realEstateCity,
@@ -170,7 +166,7 @@ class AddEditViewModel @Inject constructor(
     private fun updateRealEstate(realEstate: RealEstate) =
         viewModelScope.launch {
             realEstateRepository.update(realEstate)
-            createPhotos(realEstate.id, uiPhotos.value)
+            createPhotos(realEstate.id, _uiPhotos.value)
 
             _uiState.value = AddEditUiState.Success("RealEstate is update")
         }
@@ -178,7 +174,7 @@ class AddEditViewModel @Inject constructor(
     private fun createRealEstate(realEstate: RealEstate) =
         viewModelScope.launch {
             val newRealEstateId = realEstateRepository.insert(realEstate)
-            createPhotos(newRealEstateId, uiPhotos.value)
+            createPhotos(newRealEstateId, _uiPhotos.value)
             _uiState.value = AddEditUiState.Success("RealEstate is add")
         }
 
