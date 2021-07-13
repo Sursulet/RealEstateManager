@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.repositories
 
-import android.util.Log
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import com.openclassrooms.realestatemanager.utils.SearchQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

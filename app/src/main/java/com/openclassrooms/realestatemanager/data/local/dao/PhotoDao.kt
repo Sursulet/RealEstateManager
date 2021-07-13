@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.data.local.dao
 
+import android.database.Cursor
 import androidx.room.*
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,9 @@ interface PhotoDao {
 
     @Query("SELECT COUNT(*) FROM photo GROUP BY realEstateId HAVING COUNT(*) <= :size")
     fun search(size: Int): Flow<List<Int>>
+
+    @Query("SELECT * FROM photo WHERE realEstateId = :realEstateId")
+    fun getPhotosWithCursor(realEstateId: Long): Cursor
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPhoto(photo: Photo)

@@ -5,10 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMapBinding
+import com.openclassrooms.realestatemanager.ui.detail.MapsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MapActivity : AppCompatActivity() {
+class MapsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMapBinding
 
@@ -20,7 +21,7 @@ class MapActivity : AppCompatActivity() {
 
         supportFragmentManager.commit {
             setReorderingAllowed(true)
-            replace(R.id.fragment_map_container_view, MapFragment())
+            replace(R.id.fragment_map_container_view, MapsFragment())
         }
     }
 }

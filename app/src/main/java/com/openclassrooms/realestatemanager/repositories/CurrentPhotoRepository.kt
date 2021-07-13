@@ -1,8 +1,6 @@
 package com.openclassrooms.realestatemanager.repositories
 
-import android.util.Log
 import com.openclassrooms.realestatemanager.ui.detail.PhotoUiModel
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject

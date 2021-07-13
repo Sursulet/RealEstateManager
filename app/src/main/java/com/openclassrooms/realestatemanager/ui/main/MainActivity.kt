@@ -1,11 +1,15 @@
 package com.openclassrooms.realestatemanager.ui.main
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
@@ -18,8 +22,8 @@ import com.openclassrooms.realestatemanager.ui.list.OnRealEstateClickListener
 import com.openclassrooms.realestatemanager.ui.list.RealEstatesFragment
 import com.openclassrooms.realestatemanager.ui.loan.LoanActivity
 import com.openclassrooms.realestatemanager.ui.loan.LoanFragment
-import com.openclassrooms.realestatemanager.ui.map.MapActivity
 import com.openclassrooms.realestatemanager.ui.map.MapFragment
+import com.openclassrooms.realestatemanager.ui.map.MapsActivity
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
     private var twoPane: Boolean = false
 
     private val viewModel: MainViewModel by viewModels()
+
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 123
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +63,23 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_PERMISSIONS_REQUEST_CODE)
+        } else {
+            viewModel.startLocationUpdates()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopLocationUpdates()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -121,7 +144,7 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
                         )
                     }
                 } else {
-                    val intent = Intent(this, MapActivity::class.java)
+                    val intent = Intent(this, MapsActivity::class.java)
                     startActivity(intent)
                 }
                 true

@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.api
 
+import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.data.geocoder.GeocoderResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,7 +14,7 @@ interface GeocoderApiService {
     @GET("maps/api/geocode/json?")
     suspend fun getCoordinates(
         @Query("address") address: String,
-        @Query("key") key: String = "" //TODO : BuildConfig.GOOGLE_MAPS_KEY
+        @Query("key") key: String = BuildConfig.GOOGLE_MAPS_KEY
     ): GeocoderResponse
 
     companion object {

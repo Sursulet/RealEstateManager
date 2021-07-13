@@ -27,36 +27,6 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
     abstract fun realEstateDao(): RealEstateDao
     abstract fun photoDao(): PhotoDao
 
-    /*
-    companion object {
-
-        @Volatile
-        private var INSTANCE: RealEstateManagerDatabase? = null
-
-
-        fun getInstance(
-            context: Context,
-            scope: CoroutineScope
-        ): RealEstateManagerDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context,
-                    RealEstateManagerDatabase::class.java,
-                    DATABASE_NAME
-                )
-                    .fallbackToDestructiveMigration()
-                    .addCallback(Callback(scope))
-                    .build()
-                INSTANCE = instance
-                instance
-            }
-        }
-
-    }
-
-     */
-
-
     class Callback @Inject constructor(
         private val database: Provider<RealEstateManagerDatabase>,
         private val applicationScope: CoroutineScope
@@ -121,25 +91,7 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                             title = "Kitchen",
                             bitmap = getBitmapFromURL("https://cdn.pixabay.com/photo/2017/03/22/17/39/kitchen-2165756_1280.jpg"),
                             realEstateId = 1
-                        )/*,
-                        Photo(
-                            id = 13,
-                            title = "Bedroom",
-                            bitmap = getBitmapFromURL("https://cdn.pixabay.com/photo/2014/07/10/17/17/bedroom-389254_1280.jpg"),
-                            realEstateId = 1
-                        ),
-                        Photo(
-                            id = 14,
-                            title = "Bathroom",
-                            bitmap = getBitmapFromURL("https://cdn.pixabay.com/photo/2017/02/24/12/24/bathroom-2094735_1280.jpg"),
-                            realEstateId = 1
-                        ),
-                        Photo(
-                            id = 15,
-                            title = "Garden",
-                            bitmap = getBitmapFromURL("https://cdn.pixabay.com/photo/2016/02/19/10/16/villa-1209148_1280.jpg"),
-                            realEstateId = 1
-                        )*/
+                        )
                     )
                 )
                 photoDao.insertPhotos(
@@ -155,19 +107,7 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                             title = "Kitchen",
                             bitmap = getBitmapFromURL("https://cdn.pixabay.com/photo/2017/02/24/12/22/kitchen-2094707_1280.jpg"),
                             realEstateId = 2
-                        )/*,
-                        Photo(
-                            id = 23,
-                            title = "Bedroom",
-                            bitmap = getBitmapFromURL("https://cdn.pixabay.com/photo/2020/10/18/09/16/bedroom-5664221_1280.jpg"),
-                            realEstateId = 2
-                        ),
-                        Photo(
-                            id = 24,
-                            title = "Bathroom",
-                            bitmap = getBitmapFromURL("https://cdn.pixabay.com/photo/2014/10/16/08/41/bathroom-490781_1280.jpg"),
-                            realEstateId = 2
-                        )*/
+                        )
                     )
                 )
             }

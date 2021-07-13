@@ -3,11 +3,14 @@ package com.openclassrooms.realestatemanager.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.google.android.gms.maps.model.LatLng
-import com.openclassrooms.realestatemanager.repositories.*
-import com.openclassrooms.realestatemanager.utils.Constants.NO_REAL_ESTATE_ID
+import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
+import com.openclassrooms.realestatemanager.repositories.GeocoderRepository
+import com.openclassrooms.realestatemanager.repositories.PhotoRepository
+import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
 import com.openclassrooms.realestatemanager.utils.Utils.formattedAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel

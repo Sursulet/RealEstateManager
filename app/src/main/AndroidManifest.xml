@@ -16,7 +16,6 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".RealEstateManagerApplication"
@@ -28,7 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RealEstateManager">
         <activity android:name=".ui.loan.LoanActivity" />
-        <activity android:name=".ui.map.MapActivity" />
+        <activity android:name=".ui.map.MapsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -53,6 +52,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <provider
+            android:authorities="com.openclassrooms.realestatemanager.provider"
+            android:name=".provider.RealEstateContentProvider"
+            android:exported="false" />
     </application>
 
 </manifest>

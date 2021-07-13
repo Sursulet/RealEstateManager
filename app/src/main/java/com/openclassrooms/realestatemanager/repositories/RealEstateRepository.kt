@@ -23,14 +23,6 @@ class RealEstateRepository @Inject constructor(
         realEstateDao.update(realEstate)
     }
 
-    suspend fun delete(realEstate: RealEstate) {
-        realEstateDao.delete(realEstate)
-    }
-
-    suspend fun deleteAll() {
-        realEstateDao.deleteAll()
-    }
-
     fun search(
         type: String,
         zone: String,
@@ -55,12 +47,4 @@ class RealEstateRepository @Inject constructor(
         size = size
     )
 
-    fun searchPhoto() = realEstateDao.searchPhoto()
-    fun searchDate(date: LocalDate?) = realEstateDao.searchDate(date)
-
-    /*
-    @Query("SELECT * FROM real_estate WHERE id = :realEstateId")
-    fun getRealEstatesWithCursor(realEstateId: Int): Cursor?
-
-     */
 }

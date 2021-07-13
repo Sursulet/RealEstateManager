@@ -1,18 +1,13 @@
 package com.openclassrooms.realestatemanager.ui.list
 
 import android.graphics.Color
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.di.CoroutinesDispatchers
 import com.openclassrooms.realestatemanager.repositories.*
 import com.openclassrooms.realestatemanager.utils.Constants.NO_REAL_ESTATE_ID
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
-import com.openclassrooms.realestatemanager.utils.SearchQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -58,7 +53,7 @@ class RealEstatesViewModel @Inject constructor(
         viewModelScope.launch(coroutineDispatchers.iOCoroutineDispatcher) {
             combine(twoPane, selectedId, realEstatesFlow) { twoPane, id, list ->
                 list.map {
-                    val photo = photoRepository.getPhoto(it.id).first()
+                    val photo = photoRepository.getPhoto(it.id).filterNotNull().first()
                     val color = if (twoPane && id == it.id) R.color.colorAccent else Color.WHITE
                     RealEstateUiModel(
                         id = it.id,
@@ -77,38 +72,8 @@ class RealEstatesViewModel @Inject constructor(
 
     }
 
-    /*
-    val uiModelsLiveData: LiveData<List<RealEstateUiModel>> = liveData {
-        realEstatesFlow.collect { list ->
-            val uiModels = list.map {
-                val photoURl = photoRepository.getPhoto(it.id).firstOrNull()
-                Log.d(TAG, "DATE: ${it.createdDateFormatted}")
-                RealEstateUiModel(
-                    id = it.id,
-                    url = photoURl?.url,
-                    type = it.type,
-                    city = it.city,
-                    price = "$" + it.price.toString(),
-                    style = "#FF4081"
-                )
-            }
-
-            emit(uiModels)
-        }
-    }
-
-     */
-
     fun onRealEstateSelected(realEstateId: Long) {
         _selectedId.value = realEstateId
         currentIdRepository.setRealEstateId(realEstateId)
     }
-
-    data class Wrapper(
-        val searchQuery: SearchQuery,
-        val type: String,
-        val zone: String,
-        val minPrice: Float,
-        val maxPrice: Float
-    )
 }

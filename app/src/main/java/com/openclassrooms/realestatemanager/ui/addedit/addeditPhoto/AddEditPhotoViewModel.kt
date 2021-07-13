@@ -1,11 +1,9 @@
 package com.openclassrooms.realestatemanager.ui.addedit.addeditPhoto
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.repositories.CurrentPhotoRepository
 import com.openclassrooms.realestatemanager.ui.detail.PhotoUiModel
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,20 +16,17 @@ class AddEditPhotoViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<AddEditPhotoUiState>(AddEditPhotoUiState.Add)
     val uiState = _uiState.asStateFlow()
-    val emptyBitmap:Bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)
 
     var title: String = ""
     var photo: Bitmap? = null
 
     fun onSaveClick() {
         if (title.isBlank()) {
-            //showInvalidInputMessage("onSaveClick: Type cannot be empty")
             showInvalidInputMessage(ErrorMessage.TITLE)
             return
         }
 
         if (photo == null) {
-            //showInvalidInputMessage("onSaveClick: Type cannot be empty")
             showInvalidInputMessage(ErrorMessage.PHOTO)
             return
         }
@@ -40,7 +35,7 @@ class AddEditPhotoViewModel @Inject constructor(
         addPhoto(newPhoto)
     }
 
-    fun addPhoto(photoUiModel: PhotoUiModel) {
+    private fun addPhoto(photoUiModel: PhotoUiModel) {
         _uiState.value = AddEditPhotoUiState.NavigateBackResult(photoUiModel)
         currentPhotoRepository.setValue(photoUiModel)
     }
@@ -51,7 +46,6 @@ class AddEditPhotoViewModel @Inject constructor(
 
     sealed class AddEditPhotoUiState {
         object Add : AddEditPhotoUiState()
-        object Edit : AddEditPhotoUiState()
         data class ShowInvalidInputMessage(val msg: ErrorMessage) : AddEditPhotoUiState() //Error
         data class NavigateBackResult(val result: PhotoUiModel) : AddEditPhotoUiState() //Success
     }

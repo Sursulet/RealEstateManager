@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import androidx.room.TypeConverter
 import java.io.ByteArrayOutputStream
 import java.time.LocalDate
-import java.util.*
 
 class Converters {
     @TypeConverter

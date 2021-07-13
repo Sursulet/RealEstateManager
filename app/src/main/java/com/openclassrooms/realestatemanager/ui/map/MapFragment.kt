@@ -1,20 +1,16 @@
 package com.openclassrooms.realestatemanager.ui.map
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentMapBinding
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -24,7 +20,7 @@ class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MapViewModel by viewModels()
+    private val viewModel: MapsViewModel by viewModels()
     private var map: GoogleMap? = null
 
     override fun onCreateView(
@@ -33,8 +29,7 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,10 +44,14 @@ class MapFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { uiState ->
+                Log.d(TAG, "onViewCreated: $uiState")
+                /*
                 uiState.map {
                     map?.addMarker(MarkerOptions().position(it).title("Marker in Sydney"))
                     map?.moveCamera(CameraUpdateFactory.newLatLng(it))
                 }
+                
+                 */
             }
         }
     }

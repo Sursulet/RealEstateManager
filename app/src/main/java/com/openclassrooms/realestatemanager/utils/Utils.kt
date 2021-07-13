@@ -5,8 +5,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
-import android.net.wifi.WifiManager
+import android.net.*
+import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -59,8 +65,44 @@ object Utils {
      * @return
      */
     fun isInternetAvailable(context: Context): Boolean {
-        val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return wifi.isWifiEnabled
+        //val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        //return wifi.isWifiEnabled
+        val cm =
+            context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        return activeNetwork?.isConnectedOrConnecting == true
+    }
+
+    @ExperimentalCoroutinesApi
+    fun checkNetworkConnection(context: Context): Flow<Boolean> = callbackFlow {
+        val callback = object : ConnectivityManager.NetworkCallback() {
+
+            override fun onUnavailable() {
+                super.onUnavailable()
+                trySend(false)
+            }
+
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                trySend(true)
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                trySend(false)
+            }
+        }
+
+        val request = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        request.registerNetworkCallback(
+            NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build(), callback
+        )
+
+        awaitClose {
+            request.unregisterNetworkCallback(callback)
+        }
     }
 
     fun formattedPrice(value: Double): String? {
@@ -134,6 +176,8 @@ object Utils {
         dist = acos(dist)
         dist = rad2deg(dist)
         dist *= 60 * 1.1515
+
+        Log.d(TAG, "getDistance: $dist")
         return dist
     }
 

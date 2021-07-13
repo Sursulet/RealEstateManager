@@ -1,21 +1,39 @@
 package com.openclassrooms.realestatemanager.provider
 
 import android.content.ContentProvider
-import android.content.ContentUris
 import android.content.ContentValues
+import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import androidx.room.Room
 import com.openclassrooms.realestatemanager.data.local.RealEstateManagerDatabase
+import com.openclassrooms.realestatemanager.data.local.dao.PhotoDao
+import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
+import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
+import com.openclassrooms.realestatemanager.utils.Constants.DATABASE_NAME
 
 
-class RealEstateContentProvider /*: ContentProvider()*/ {
-/*
-    val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
-    val TABLE_NAME = RealEstate::class.java.simpleName
-    val URI_ITEM = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
+class RealEstateContentProvider : ContentProvider() {
+
+    private val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
+    private val TABLE_ESTATE_NAME = RealEstate::class.java.simpleName
+    private val TABLE_PHOTO_NAME = Photo::class.java.simpleName
+
+    private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
+        addURI(AUTHORITY, TABLE_ESTATE_NAME, 1)
+        addURI(AUTHORITY, "$TABLE_ESTATE_NAME/#", 2)
+        addURI(AUTHORITY, TABLE_PHOTO_NAME, 3)
+    }
+
+    private lateinit var appDatabase: RealEstateManagerDatabase
+    private var realEstateDao: RealEstateDao? = null
+    private var photoDao: PhotoDao? = null
 
     override fun onCreate(): Boolean {
+        appDatabase = Room.databaseBuilder(context!!, RealEstateManagerDatabase::class.java, DATABASE_NAME).build()
+        realEstateDao = appDatabase.realEstateDao()
+        photoDao = appDatabase.photoDao()
         return true
     }
 
@@ -26,37 +44,36 @@ class RealEstateContentProvider /*: ContentProvider()*/ {
         selectionArgs: Array<out String>?,
         sortOrder: String?
     ): Cursor? {
-
-        if (context != null) {
-            val id: Long = ContentUris.parseId(uri)
-            val cursor = RealEstateManagerDatabase.getIntance(context!!).realEstateDao()
-                .getItemsWithCursor(id)
-            cursor.setNotificationUri(context!!.contentResolver, uri)
-            return cursor
+        return when(sUriMatcher.match(uri)) {
+            1 -> {
+                realEstateDao?.getRealEstatesWithCursor()
+            }
+            2 -> {
+                val id = uri.lastPathSegment!!.toLong()
+                realEstateDao?.getRealEstateWithCursor(id)
+            }
+            3 -> {
+                val id = uri.lastPathSegment!!.toLong()
+                photoDao?.getPhotosWithCursor(id)
+            }
+            else -> throw IllegalArgumentException()
         }
-
-        throw IllegalArgumentException("Failed to query row for uri $uri")
     }
 
-    override fun getType(uri: Uri): String? {
-        return "vnd.android.cursor.item/$AUTHORITY.$TABLE_NAME"
+    // TODO : not finished
+    override fun getType(uri: Uri): String? = when(sUriMatcher.match(uri)) {
+        1 -> "vnd.android.cursor.item/$AUTHORITY.$TABLE_ESTATE_NAME"
+        2 -> "vnd.android.cursor.item/$AUTHORITY."
+        3 -> "vnd.android.cursor.item/$AUTHORITY.$TABLE_PHOTO_NAME"
+        else -> null
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
-        if (context != null && values != null) {
-            val id = RealEstateManagerDatabase.getIntance(context!!).realEstateDao()
-                .insert(RealEstate.fromContentValues(values))
-            if (id != 0L) {
-                context!!.contentResolver.notifyChange(uri, null)
-                return ContentUris.withAppendedId(uri, id)
-            }
-        }
-
-        throw IllegalArgumentException("Failed to insert row into $uri")
+        return null
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        throw IllegalArgumentException("Failed to delete row into $uri");
+        return 0
     }
 
     override fun update(
@@ -65,14 +82,7 @@ class RealEstateContentProvider /*: ContentProvider()*/ {
         selection: String?,
         selectionArgs: Array<out String>?
     ): Int {
-        if (context != null && values != null) {
-            val count = RealEstateManagerDatabase.getIntance(context!!).realEstateDao()
-                .insert(RealEstate.fromContentValues(values))
-            context!!.contentResolver.notifyChange(uri, null)
-            return count.toString().toInt()
-        }
-
-        throw IllegalArgumentException("Failed to update row into $uri")
+        return 0
     }
-*/
+
 }

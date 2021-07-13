@@ -28,7 +28,7 @@ class AddEditPhotoDialog : DialogFragment(R.layout.dialog_add_edit_photo) {
 
     lateinit var binding: DialogAddEditPhotoBinding
     private val viewModel: AddEditPhotoViewModel by viewModels()
-    lateinit var image: Bitmap
+    private lateinit var image: Bitmap
 
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->

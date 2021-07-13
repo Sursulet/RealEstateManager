@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.repositories
 import android.app.Application
 import android.location.Location
 import android.os.Looper
-import android.util.Log
 import com.google.android.gms.location.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,6 +44,7 @@ class CurrentLocationRepository @Inject constructor(
                 )
             } catch (e: SecurityException) {
                 e.printStackTrace()
+                isInitialized.set(false)
             }
         }
     }

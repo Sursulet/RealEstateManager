@@ -11,8 +11,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentEditBinding
 import com.openclassrooms.realestatemanager.ui.addedit.addeditPhoto.AddEditPhotoDialog
-import com.openclassrooms.realestatemanager.ui.addedit.addeditPhoto.OnAddEditPhotoListener
-import com.openclassrooms.realestatemanager.ui.detail.PhotoUiModel
 import com.openclassrooms.realestatemanager.ui.detail.PhotosAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
