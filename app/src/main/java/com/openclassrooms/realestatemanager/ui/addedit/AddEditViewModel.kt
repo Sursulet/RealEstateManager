@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.addedit
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
@@ -16,13 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
-    currentIdRepository: CurrentIdRepository,
+    private val currentIdRepository: CurrentIdRepository,
     private val realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
     private val currentPhotoRepository: CurrentPhotoRepository
 ) : ViewModel() {
 
-    private val realEstateId = currentIdRepository.currentId
     private val newPhoto = currentPhotoRepository.photo
 
     private val _realEstate = MutableStateFlow<RealEstate?>(null)
@@ -34,8 +34,9 @@ class AddEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _realEstate.value =
-                realEstateId.firstOrNull()?.let { id -> realEstateRepository.getRealEstate(id).first() }
+            val lol =  currentIdRepository.currentId.value
+            println("lol = $lol")
+            _realEstate.value = lol?.let { id -> realEstateRepository.getRealEstate(id).first() }
 
             _realEstate.combine(newPhoto) { estate, newPhoto ->
                 val photos = if (estate?.id != null) {
@@ -96,9 +97,13 @@ class AddEditViewModel @Inject constructor(
     var realEstateStatus: Boolean = false
 
     fun onSaveClick() = viewModelScope.launch {
+        val realEstateId= currentIdRepository.currentId.value
+
+        println("onSaveClick() called : $realEstateId")
+
         var hasError = false
         val errorState = AddEditUiState.ShowInvalidInputMessage(
-            photosError = if (realEstateId.firstOrNull() == null && _uiPhotos.value.isEmpty()) {
+            photosError = if (realEstateId == null && _uiPhotos.value.isEmpty()) {
                 hasError = true
                 "Add one photo"
             } else null,
@@ -145,7 +150,7 @@ class AddEditViewModel @Inject constructor(
             return@launch
         }
         
-        if (realEstateId.firstOrNull() != null) {
+        if (realEstateId != null) {
             val updateRealEstate = _realEstate.value!!.copy(
                 type = realEstateType,
                 description = realEstateDesc,

@@ -31,8 +31,6 @@ class EditViewModelUnitTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var viewModel: AddEditViewModel
-
     private val currentIdRepository = mockkClass(CurrentIdRepository::class)
     private val realEstateRepository = mockkClass(RealEstateRepository::class)
     private val photoRepository = mockkClass(PhotoRepository::class)
@@ -40,7 +38,7 @@ class EditViewModelUnitTest {
 
     @Before
     fun setUp() {
-        every { currentIdRepository.currentId } returns flowOf(null)
+        every { currentIdRepository.currentId } returns MutableStateFlow<Long?>(null)
         every { realEstateRepository.getRealEstate(1) } returns flowOf(realEstateA)
         every { photoRepository.getPhotos(1) } returns flowOf(testPhotos)
         every { currentPhotoRepository.photo } returns MutableStateFlow(testUiModelPhotos)
@@ -65,18 +63,21 @@ class EditViewModelUnitTest {
                 )
             )
         } returns 0
+        coJustRun {
+            realEstateRepository.update(any())
+        }
         coJustRun { photoRepository.insertPhoto(any()) }
+    }
 
-        viewModel = AddEditViewModel(
+    @Test
+    fun `empty fields`() = runBlockingTest {
+        val viewModel = AddEditViewModel(
             currentIdRepository = currentIdRepository,
             realEstateRepository = realEstateRepository,
             photoRepository = photoRepository,
             currentPhotoRepository = currentPhotoRepository
         )
-    }
 
-    @Test
-    fun `empty fields`() = runBlockingTest {
         viewModel.realEstateType = ""
         viewModel.realEstatePrice = ""
         viewModel.realEstateStreet = ""
@@ -113,6 +114,13 @@ class EditViewModelUnitTest {
 
     @Test
     fun `insert a real estate`() = runBlockingTest {
+        val viewModel = AddEditViewModel(
+            currentIdRepository = currentIdRepository,
+            realEstateRepository = realEstateRepository,
+            photoRepository = photoRepository,
+            currentPhotoRepository = currentPhotoRepository
+        )
+
         viewModel.realEstateType = "House"
         viewModel.realEstatePrice = "123000000"
         viewModel.realEstateStreet = "16 Rue Auguste Perret"
@@ -136,23 +144,25 @@ class EditViewModelUnitTest {
         assertThat(viewModel.uiState.value).isEqualTo(state)
 
         coVerify(exactly = 1) {
-            realEstateRepository.insert(RealEstate(
-                id = 0,
-                type = "House",
-                city = "Paris",
-                price = 123000000f,
-                surface = 234,
-                rooms = 5,
-                bathrooms = 2,
-                bedrooms = 3,
-                description = "",
-                address = "16 Rue Auguste Perret, x, Paris, 75013, France",
-                nearest = "school",
-                status = false,
-                created = LocalDate.now(),
-                saleTimestamp = null,
-                agent = "Peach"
-            ))
+            realEstateRepository.insert(
+                RealEstate(
+                    id = 0,
+                    type = "House",
+                    city = "Paris",
+                    price = 123000000f,
+                    surface = 234,
+                    rooms = 5,
+                    bathrooms = 2,
+                    bedrooms = 3,
+                    description = "",
+                    address = "16 Rue Auguste Perret, x, Paris, 75013, France",
+                    nearest = "school",
+                    status = false,
+                    created = LocalDate.now(),
+                    saleTimestamp = null,
+                    agent = "Peach"
+                )
+            )
         }
 
         confirmVerified(realEstateRepository)
@@ -160,7 +170,14 @@ class EditViewModelUnitTest {
 
     @Test
     fun `update real estate`() = runBlockingTest {
-        every { currentIdRepository.currentId } returns flowOf(1)
+        every { currentIdRepository.currentId } returns MutableStateFlow(1)
+
+        val viewModel = AddEditViewModel(
+            currentIdRepository = currentIdRepository,
+            realEstateRepository = realEstateRepository,
+            photoRepository = photoRepository,
+            currentPhotoRepository = currentPhotoRepository
+        )
 
         viewModel.realEstateType = "House"
         viewModel.realEstatePrice = "123000000"
@@ -180,28 +197,32 @@ class EditViewModelUnitTest {
 
         viewModel.onSaveClick()
 
-        val state = AddEditViewModel.AddEditUiState.Success("RealEstate is add")
+        val state = AddEditViewModel.AddEditUiState.Success("RealEstate is update")
 
         assertThat(viewModel.uiState.value).isEqualTo(state)
 
         coVerify(exactly = 1) {
-            realEstateRepository.update(RealEstate(
-                id = 0,
-                type = "House",
-                city = "Paris",
-                price = 123000000f,
-                surface = 234,
-                rooms = 5,
-                bathrooms = 2,
-                bedrooms = 3,
-                description = "",
-                address = "16 Rue Auguste Perret, x, Paris, 75013, France",
-                nearest = "school",
-                status = false,
-                created = LocalDate.now(),
-                saleTimestamp = null,
-                agent = "Peach"
-            ))
+            realEstateRepository.update(
+                eq(
+                    RealEstate(
+                        id = 0,
+                        type = "House",
+                        city = "Paris",
+                        price = 123000000f,
+                        surface = 234,
+                        rooms = 5,
+                        bathrooms = 2,
+                        bedrooms = 3,
+                        description = "",
+                        address = "16 Rue Auguste Perret, x, Paris, 75013, France",
+                        nearest = "school",
+                        status = false,
+                        created = LocalDate.now(),
+                        saleTimestamp = null,
+                        agent = "Peach"
+                    )
+                )
+            )
         }
 
         confirmVerified(realEstateRepository)

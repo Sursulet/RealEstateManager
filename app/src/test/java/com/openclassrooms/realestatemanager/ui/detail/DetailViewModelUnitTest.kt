@@ -13,6 +13,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockkClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 
@@ -39,7 +40,7 @@ class DetailViewModelUnitTest {
 
     @Before
     fun setUp() {
-        every { currentIdRepository.currentId } returns flowOf(1)
+        every { currentIdRepository.currentId } returns MutableStateFlow(1)
         every { realEstateRepository.getRealEstate(1) } returns flowOf(realEstateA)
         every { photoRepository.getPhotos(1) } returns flowOf(testPhotos)
         coEvery { geocoderRepository.getCoordinates(realEstateA.address) } returns getDefaultGeocoderResponse()

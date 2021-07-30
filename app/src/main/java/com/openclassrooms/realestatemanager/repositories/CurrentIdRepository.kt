@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class CurrentIdRepository @Inject constructor() {
 
     private val _currentId = MutableStateFlow<Long?>(null)
-    val currentId: Flow<Long?> = _currentId.asStateFlow()
+    val currentId: StateFlow<Long?> = _currentId.asStateFlow()
 
 
 
