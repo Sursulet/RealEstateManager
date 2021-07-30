@@ -26,4 +26,11 @@ class UtilsUnitTest {
         assertThat(result).isEqualTo(date)
     }
 
+    @Test
+    fun formattedAddress() { //TODO ERREUR
+        val address = "16 Rue Auguste Perret 75013 Paris"
+        val result = Utils.formattedAddress(address)
+        assertThat(result).isEqualTo(" \n $address")
+    }
+
 }

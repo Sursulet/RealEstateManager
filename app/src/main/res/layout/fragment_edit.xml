@@ -104,7 +104,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/edit_layout_address"
+                android:id="@+id/edit_layout_street"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -114,10 +114,49 @@
                 app:layout_constraintTop_toBottomOf="@+id/edit_layout_type">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_address"
+                    android:id="@+id/edit_street"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/title_address"
+                    android:hint="@string/title_street"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_layout_extras"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_layout_street">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_extras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title_extras"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_layout_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toStartOf="@+id/edit_layout_city"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_layout_extras">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title_code"
                     android:inputType="textMultiLine" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -127,10 +166,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
                 app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_layout_address">
+                app:layout_constraintStart_toEndOf="@+id/edit_layout_code"
+                app:layout_constraintTop_toBottomOf="@+id/edit_layout_extras">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_city"
@@ -142,7 +182,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/edit_layout_state"
+                android:id="@+id/edit_layout_country"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -152,10 +192,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/edit_layout_city">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_state"
+                    android:id="@+id/edit_country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/title_state"
+                    android:hint="@string/title_country"
                     android:inputType="textMultiLine" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -168,7 +208,7 @@
                 app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_layout_state">
+                app:layout_constraintTop_toBottomOf="@+id/edit_layout_country">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_desc"

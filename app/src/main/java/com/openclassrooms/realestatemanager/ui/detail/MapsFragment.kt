@@ -1,18 +1,22 @@
 package com.openclassrooms.realestatemanager.ui.detail
 
+import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.ui.map.MapsViewModel
+import com.openclassrooms.realestatemanager.utils.Constants
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -25,6 +29,17 @@ class MapsFragment : Fragment() {
 
     private lateinit var map : GoogleMap
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if(isGranted) {
+                Log.d(TAG, "Permission: Granted")
+            } else {
+                Log.d(TAG, "Permission: Denied")
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +50,7 @@ class MapsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /*
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync { googleMap ->
 
@@ -54,27 +70,78 @@ class MapsFragment : Fragment() {
 
             with(map.uiSettings) {
                 isZoomControlsEnabled = true
+                isCompassEnabled = false
                 isZoomGesturesEnabled = true
+                isScrollGesturesEnabled = true
+            }
+
+            map.setOnCameraMoveListener {
+                viewModel.zoomLevel.value = map.cameraPosition.zoom
+                //Log.d(TAG, "ZOOM: $level")
             }
         }
 
+         */
+
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { state ->
-                when(state) {
-                    MapsViewModel.MapsUiState.Empty -> {}
+                when (state) {
+                    MapsViewModel.MapsUiState.Empty -> {
+                    }
                     is MapsViewModel.MapsUiState.Available -> {
-                        map.addMarker(MarkerOptions().position(state.mapsUiModel.lastLocation).title("Marker in Sydney"))
+                        Log.d(TAG, "onViewCreated: ${state.mapsUiModel.lastLocation}")
+                        /*
+                        map.addMarker(
+                            MarkerOptions().position(state.mapsUiModel.lastLocation)
+                                .title("Marker in Sydney")
+                        )
                         //map.moveCamera(CameraUpdateFactory.newLatLng(state.mapsUiModel.lastLocation))
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(state.mapsUiModel.lastLocation, 10F))
+                        //map.animateCamera(CameraUpdateFactory.newLatLngZoom(state.mapsUiModel.lastLocation, 10F))
+                        map.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                state.mapsUiModel.lastLocation,
+                                10F
+                            )
+                        )
 
                         state.mapsUiModel.markers.map {
                             map.addMarker(MarkerOptions().position(it))
                             //map.moveCamera(CameraUpdateFactory.newLatLng(it))
                         }
+
+                         */
                     }
-                    is MapsViewModel.MapsUiState.ShowErrorMessage -> TODO()
+                    is MapsViewModel.MapsUiState.ShowErrorMessage -> {
+                        Log.d(TAG, "onViewCreated: ERROR: ${state.permission} || ${state.network}")
+                        if (!state.network) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Need connexion state.msg",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+
+                        if (!state.permission) {
+                            ActivityCompat.requestPermissions(
+                                requireActivity(),
+                                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                                Constants.REQUEST_PERMISSIONS_REQUEST_CODE
+                            )
+                        }
+                    }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume: ")
+        //viewModel.check()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopLocationUpdates()
     }
 }

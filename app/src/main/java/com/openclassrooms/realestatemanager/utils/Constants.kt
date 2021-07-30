@@ -10,6 +10,7 @@ object Constants {
 
     const val DATABASE_NAME = "real_estate_manager_db"
 
+    const val REQUEST_PERMISSIONS_REQUEST_CODE = 123
     const val RATE: Double = 0.84
 
     const val GOOGLE_API_URL = "real_estate_manager_db"
@@ -49,6 +50,37 @@ object Constants {
     val PERIODS = listOf("", "days", "weeks", "month", "years")
 
     val defaultLocation : Location = Location("")
+
+    fun getRadius(zoomLevel: Float): Double {
+        var meters = 0.0
+        when(zoomLevel) {
+            0f -> meters = 40075017.0
+            1f -> meters = 20037508.0
+            2f -> meters = 10018754.0
+            3f -> meters = 5009377.1
+            4f -> meters = 2504688.5
+            5f -> meters = 1252344.3
+            6f -> meters = 626172.1
+            7f -> meters = 313086.1
+            8f -> meters = 156543.0
+            9f -> meters = 78271.5
+            10f -> meters = 39135.8
+            11f -> meters = 19567.9
+            12f -> meters = 9783.94
+            13f -> meters = 4891.97
+            14f -> meters = 2445.98
+            15f -> meters = 1222.99
+            16f -> meters = 611.496
+            17f -> meters = 305.748
+            18f -> meters = 152.874
+            19f -> meters = 76.437
+            20f -> meters = 38.2185
+            21f -> meters = 19.10926
+            22f -> meters = 9.55463
+        }
+
+        return meters
+    }
 }
 
 //enum class SearchQuery { BY_TYPE, BY_DATE }

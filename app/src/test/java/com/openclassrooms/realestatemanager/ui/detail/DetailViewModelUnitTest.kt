@@ -39,7 +39,7 @@ class DetailViewModelUnitTest {
 
     @Before
     fun setUp() {
-        every { currentIdRepository.getRealEstateId() } returns 1
+        every { currentIdRepository.currentId } returns flowOf(1)
         every { realEstateRepository.getRealEstate(1) } returns flowOf(realEstateA)
         every { photoRepository.getPhotos(1) } returns flowOf(testPhotos)
         coEvery { geocoderRepository.getCoordinates(realEstateA.address) } returns getDefaultGeocoderResponse()
@@ -67,7 +67,7 @@ class DetailViewModelUnitTest {
     }
 
     @Test
-    fun test() {
+    fun `display detail of real estate`() {
 
         val value = getValue(viewModel.uiModelLiveData)
 

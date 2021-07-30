@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.net.*
+import android.net.wifi.WifiManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.android.gms.maps.model.LatLng
 import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -73,22 +76,52 @@ object Utils {
         return activeNetwork?.isConnectedOrConnecting == true
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isOnline(context: Context): Boolean {
+        val connMgr = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connMgr.activeNetwork
+        val networkCapabilities = connMgr.getNetworkCapabilities(activeNetwork)
+        val networkInfo: NetworkInfo? = connMgr.activeNetworkInfo
+        return networkInfo?.isConnected == true
+    }
+
+
+    fun checkWifi(context: Context): Boolean {
+        val wifi = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return wifi.isDefaultNetworkActive //.isWifiEnabled
+        /*
+        if(wifi.isWifiEnabled) {
+            val info = wifi.connectionInfo
+            if(info.networkId == -1) {
+                return false
+            }
+            return true
+        } else {
+            return false
+        }
+
+         */
+    }
+
     @ExperimentalCoroutinesApi
     fun checkNetworkConnection(context: Context): Flow<Boolean> = callbackFlow {
         val callback = object : ConnectivityManager.NetworkCallback() {
 
             override fun onUnavailable() {
                 super.onUnavailable()
+                Log.d(TAG, "onUnavailable: ")
                 trySend(false)
             }
 
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
+                Log.d(TAG, "onAvailable: ")
                 trySend(true)
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
+                Log.d(TAG, "onLost: ")
                 trySend(false)
             }
         }
@@ -96,7 +129,7 @@ object Utils {
         val request = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         request.registerNetworkCallback(
             NetworkRequest.Builder()
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                //.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .build(), callback
         )
 

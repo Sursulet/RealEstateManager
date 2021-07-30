@@ -22,7 +22,7 @@ class AddEditViewModel @Inject constructor(
     private val currentPhotoRepository: CurrentPhotoRepository
 ) : ViewModel() {
 
-    private val realEstateId = currentIdRepository.currentId.value
+    private val realEstateId = currentIdRepository.currentId
     private val newPhoto = currentPhotoRepository.photo
 
     private val _realEstate = MutableStateFlow<RealEstate?>(null)
@@ -35,7 +35,7 @@ class AddEditViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _realEstate.value =
-                realEstateId?.let { id -> realEstateRepository.getRealEstate(id).first() }
+                realEstateId.firstOrNull()?.let { id -> realEstateRepository.getRealEstate(id).first() }
 
             _realEstate.combine(newPhoto) { estate, newPhoto ->
                 val photos = if (estate?.id != null) {
@@ -58,9 +58,11 @@ class AddEditViewModel @Inject constructor(
                     photos = uiPhotos,
                     type = estate?.type ?: "",
                     price = estate?.price?.toString() ?: "",
-                    address = estate?.address ?: "",
+                    street = estate?.address ?: "",
+                    extras = estate?.address ?: "",
                     city = estate?.city ?: "",
-                    state = estate?.city ?: "",
+                    code = estate?.address ?: "",
+                    country = estate?.city ?: "",
                     nearest = estate?.nearest ?: "",
                     description = estate?.description ?: "",
                     surface = estate?.surface?.toString() ?: "",
@@ -78,9 +80,11 @@ class AddEditViewModel @Inject constructor(
 
     var realEstateType: String = ""
     var realEstatePrice: String = ""
-    var realEstateAddress: String = ""
+    var realEstateStreet: String = ""
+    var realEstateExtras: String = ""
     var realEstateCity: String = ""
-    var realEstateState: String = ""
+    var realEstateCode: String = ""
+    var realEstateCountry: String = ""
     var realEstateAgent: String = ""
     var realEstateDesc: String = ""
     var realEstateSurface: String = ""
@@ -91,21 +95,36 @@ class AddEditViewModel @Inject constructor(
     var saleTimestamp = null
     var realEstateStatus: Boolean = false
 
-    fun onSaveClick() {
+    fun onSaveClick() = viewModelScope.launch {
         var hasError = false
         val errorState = AddEditUiState.ShowInvalidInputMessage(
-            photosError = if (realEstateId == null && _uiPhotos.value.isEmpty()) {
+            photosError = if (realEstateId.firstOrNull() == null && _uiPhotos.value.isEmpty()) {
                 hasError = true
                 "Add one photo"
             } else null,
             typeError = if (realEstateType.isBlank()) {
                 hasError = true
-                "type is empty "
+                "type is empty"
             } else null,
-
-            addressError = if (realEstateAddress.isBlank()) {
+            streetError = if (realEstateStreet.isBlank()) {
                 hasError = true
-                "address is empty"
+                "street is empty"
+            } else null,
+            extrasError = if (realEstateExtras.isBlank()) {
+                hasError = true
+                "extrat is empty"
+            } else null,
+            cityError = if (realEstateCity.isBlank()) {
+                hasError = true
+                "city is empty"
+            } else null,
+            codeError = if (realEstateCode.isBlank()) {
+                hasError = true
+                "code is empty"
+            } else null,
+            countryError = if (realEstateCountry.isBlank()) {
+                hasError = true
+                "country is empty"
             } else null,
             priceError = if (realEstatePrice.isBlank()) {
                 hasError = true
@@ -123,10 +142,10 @@ class AddEditViewModel @Inject constructor(
 
         if (hasError) {
             _uiState.value = errorState
-            return
+            return@launch
         }
         
-        if (realEstateId != null) {
+        if (realEstateId.firstOrNull() != null) {
             val updateRealEstate = _realEstate.value!!.copy(
                 type = realEstateType,
                 description = realEstateDesc,
@@ -136,7 +155,7 @@ class AddEditViewModel @Inject constructor(
                 rooms = realEstateRooms.toIntOrNull(),
                 bedrooms = realEstateBedrooms.toIntOrNull(),
                 bathrooms = realEstateBathrooms.toIntOrNull(),
-                address = "$realEstateAddress, $realEstateCity, $realEstateState",
+                address = "$realEstateStreet, $realEstateExtras, $realEstateCity, $realEstateCode, $realEstateCountry",
                 nearest = realEstateNearest,
                 saleTimestamp = saleTimestamp,
                 agent = realEstateAgent
@@ -153,7 +172,7 @@ class AddEditViewModel @Inject constructor(
                 rooms = realEstateRooms.toIntOrNull(),
                 bedrooms = realEstateBedrooms.toIntOrNull(),
                 bathrooms = realEstateBathrooms.toIntOrNull(),
-                address = "$realEstateAddress, $realEstateCity, $realEstateState",
+                address = "$realEstateStreet, $realEstateExtras, $realEstateCity, $realEstateCode, $realEstateCountry",
                 nearest = realEstateNearest,
                 saleTimestamp = saleTimestamp,
                 agent = realEstateAgent
@@ -195,7 +214,11 @@ class AddEditViewModel @Inject constructor(
         data class ShowInvalidInputMessage(
             val photosError: String?,
             val typeError: String?,
-            val addressError: String?,
+            val streetError: String?,
+            val extrasError: String?,
+            val cityError: String?,
+            val codeError: String?,
+            val countryError: String?,
             val priceError: String?,
             val surfaceError: String?,
             val agentError: String?

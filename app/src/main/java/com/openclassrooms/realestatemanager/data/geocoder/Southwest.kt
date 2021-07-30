@@ -3,12 +3,12 @@ package com.openclassrooms.realestatemanager.data.geocoder
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Southwest {
+data class Southwest (
     @SerializedName("lat")
     @Expose
-    var lat: Double? = null
+    var lat: Double,
 
     @SerializedName("lng")
     @Expose
-    var lng: Double? = null
-}
+    var lng: Double
+)

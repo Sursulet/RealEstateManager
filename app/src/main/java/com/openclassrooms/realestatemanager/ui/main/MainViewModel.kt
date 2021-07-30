@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
 import com.openclassrooms.realestatemanager.repositories.CurrentLocationRepository
+import com.openclassrooms.realestatemanager.repositories.LocationPermissionsRepository
 import com.openclassrooms.realestatemanager.repositories.TwoPaneRepository
 import com.openclassrooms.realestatemanager.utils.Constants.ADD_REAL_ESTATE_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val currentIdRepository: CurrentIdRepository,
     private val twoPaneRepository: TwoPaneRepository,
+    private val locationPermissionsRepository: LocationPermissionsRepository,
     private val currentLocationRepository: CurrentLocationRepository
 ) : ViewModel() {
 
@@ -42,6 +44,10 @@ class MainViewModel @Inject constructor(
 
     fun stopLocationUpdates() {
         currentLocationRepository.stopLocationUpdates()
+    }
+
+    fun checkPermissions(): Boolean {
+        return false //locationPermissionsRepository.hasLocationPermissions()
     }
 
 

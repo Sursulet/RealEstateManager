@@ -1,22 +1,25 @@
 package com.openclassrooms.realestatemanager.ui.addedit
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.SavedStateHandle
-import com.google.common.truth.Truth
-import com.openclassrooms.realestatemanager.repositories.*
-import com.openclassrooms.realestatemanager.utilities.*
-import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.mockk
-import io.mockk.mockkClass
+import com.google.common.truth.Truth.assertThat
+import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
+import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
+import com.openclassrooms.realestatemanager.repositories.CurrentPhotoRepository
+import com.openclassrooms.realestatemanager.repositories.PhotoRepository
+import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
+import com.openclassrooms.realestatemanager.utilities.MainCoroutineRule
+import com.openclassrooms.realestatemanager.utilities.realEstateA
+import com.openclassrooms.realestatemanager.utilities.testPhotos
+import com.openclassrooms.realestatemanager.utilities.testUiModelPhotos
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
+import java.time.LocalDate
 
 @ExperimentalCoroutinesApi
 class EditViewModelUnitTest {
@@ -34,14 +37,35 @@ class EditViewModelUnitTest {
     private val realEstateRepository = mockkClass(RealEstateRepository::class)
     private val photoRepository = mockkClass(PhotoRepository::class)
     private val currentPhotoRepository = mockkClass(CurrentPhotoRepository::class)
-    //@RelaxedMockK private val stateHandler = mockkClass(SavedStateHandle::class)
-    private val stateHandler =  mockk<SavedStateHandle>(relaxed = true)
 
     @Before
     fun setUp() {
-        every { currentIdRepository.currentId.value } returns 1
+        every { currentIdRepository.currentId } returns flowOf(null)
         every { realEstateRepository.getRealEstate(1) } returns flowOf(realEstateA)
         every { photoRepository.getPhotos(1) } returns flowOf(testPhotos)
+        every { currentPhotoRepository.photo } returns MutableStateFlow(testUiModelPhotos)
+        coEvery {
+            realEstateRepository.insert(
+                RealEstate(
+                    id = 0,
+                    type = "House",
+                    city = "Paris",
+                    price = 123000000f,
+                    surface = 234,
+                    rooms = 5,
+                    bathrooms = 2,
+                    bedrooms = 3,
+                    description = "",
+                    address = "16 Rue Auguste Perret, x, Paris, 75013, France",
+                    nearest = "school",
+                    status = false,
+                    created = LocalDate.now(),
+                    saleTimestamp = null,
+                    agent = "Peach"
+                )
+            )
+        } returns 0
+        coJustRun { photoRepository.insertPhoto(any()) }
 
         viewModel = AddEditViewModel(
             currentIdRepository = currentIdRepository,
@@ -52,29 +76,134 @@ class EditViewModelUnitTest {
     }
 
     @Test
-    fun test() = runBlockingTest {
-        stateHandler["addEditType"] = "zzzz"
+    fun `empty fields`() = runBlockingTest {
+        viewModel.realEstateType = ""
+        viewModel.realEstatePrice = ""
+        viewModel.realEstateStreet = ""
+        viewModel.realEstateExtras = ""
+        viewModel.realEstateCity = ""
+        viewModel.realEstateCode = ""
+        viewModel.realEstateCountry = ""
+        viewModel.realEstateAgent = ""
+        viewModel.realEstateDesc = ""
+        viewModel.realEstateSurface = ""
+        viewModel.realEstateRooms = ""
+        viewModel.realEstateBedrooms = ""
+        viewModel.realEstateBathrooms = ""
+        viewModel.realEstateNearest = ""
+        viewModel.realEstateStatus = false
 
-        viewModel.uiState.collect { value ->
-            //Truth.assertThat(value.type).isEqualTo(realEstateA.type)
+        viewModel.onSaveClick()
+
+        val state =
+            AddEditViewModel.AddEditUiState.ShowInvalidInputMessage(
+                null,
+                "type is empty",
+                "street is empty",
+                "extrat is empty",
+                "city is empty",
+                "code is empty",
+                "country is empty",
+                "price is empty",
+                "surface is empty",
+                "agent is empty"
+            )
+        assertThat(viewModel.uiState.value).isEqualTo(state)
+    }
+
+    @Test
+    fun `insert a real estate`() = runBlockingTest {
+        viewModel.realEstateType = "House"
+        viewModel.realEstatePrice = "123000000"
+        viewModel.realEstateStreet = "16 Rue Auguste Perret"
+        viewModel.realEstateExtras = "x"
+        viewModel.realEstateCity = "Paris"
+        viewModel.realEstateCode = "75013"
+        viewModel.realEstateCountry = "France"
+        viewModel.realEstateAgent = "Peach"
+        viewModel.realEstateDesc = ""
+        viewModel.realEstateSurface = "234"
+        viewModel.realEstateRooms = "5"
+        viewModel.realEstateBedrooms = "3"
+        viewModel.realEstateBathrooms = "2"
+        viewModel.realEstateNearest = "school"
+        viewModel.realEstateStatus = false
+
+        viewModel.onSaveClick()
+
+        val state = AddEditViewModel.AddEditUiState.Success("RealEstate is add")
+
+        assertThat(viewModel.uiState.value).isEqualTo(state)
+
+        coVerify(exactly = 1) {
+            realEstateRepository.insert(RealEstate(
+                id = 0,
+                type = "House",
+                city = "Paris",
+                price = 123000000f,
+                surface = 234,
+                rooms = 5,
+                bathrooms = 2,
+                bedrooms = 3,
+                description = "",
+                address = "16 Rue Auguste Perret, x, Paris, 75013, France",
+                nearest = "school",
+                status = false,
+                created = LocalDate.now(),
+                saleTimestamp = null,
+                agent = "Peach"
+            ))
         }
-        /*
-        val value = viewModel.uiModel.value
 
+        confirmVerified(realEstateRepository)
+    }
 
-        Truth.assertThat(value.city).isEqualTo(realEstateA.city)
-        Truth.assertThat(value.price).isEqualTo(realEstateA.price.toString())
-        Truth.assertThat(value.surface).isEqualTo("${realEstateA.surface}")
-        Truth.assertThat(value.rooms).isEqualTo(realEstateA.rooms.toString())
-        Truth.assertThat(value.bedrooms).isEqualTo(realEstateA.bedrooms.toString())
-        Truth.assertThat(value.bathrooms).isEqualTo(realEstateA.bathrooms.toString())
-        Truth.assertThat(value.description).isEqualTo(realEstateA.description)
-        //Truth.assertThat(value.address).isEqualTo(realEstateA.address) address formatted
-        Truth.assertThat(value.nearest).isEqualTo(realEstateA.nearest)
-        Truth.assertThat(value.status).isEqualTo(realEstateA.status)
-        Truth.assertThat(value.photos).isEqualTo(testUiModelPhotos)
-        //Truth.assertThat(value.coordinates).isEqualTo(realEstateA.agent)
+    @Test
+    fun `update real estate`() = runBlockingTest {
+        every { currentIdRepository.currentId } returns flowOf(1)
 
-         */
+        viewModel.realEstateType = "House"
+        viewModel.realEstatePrice = "123000000"
+        viewModel.realEstateStreet = "16 Rue Auguste Perret"
+        viewModel.realEstateExtras = "x"
+        viewModel.realEstateCity = "Paris"
+        viewModel.realEstateCode = "75013"
+        viewModel.realEstateCountry = "France"
+        viewModel.realEstateAgent = "Peach"
+        viewModel.realEstateDesc = ""
+        viewModel.realEstateSurface = "234"
+        viewModel.realEstateRooms = "5"
+        viewModel.realEstateBedrooms = "3"
+        viewModel.realEstateBathrooms = "2"
+        viewModel.realEstateNearest = "school"
+        viewModel.realEstateStatus = false
+
+        viewModel.onSaveClick()
+
+        val state = AddEditViewModel.AddEditUiState.Success("RealEstate is add")
+
+        assertThat(viewModel.uiState.value).isEqualTo(state)
+
+        coVerify(exactly = 1) {
+            realEstateRepository.update(RealEstate(
+                id = 0,
+                type = "House",
+                city = "Paris",
+                price = 123000000f,
+                surface = 234,
+                rooms = 5,
+                bathrooms = 2,
+                bedrooms = 3,
+                description = "",
+                address = "16 Rue Auguste Perret, x, Paris, 75013, France",
+                nearest = "school",
+                status = false,
+                created = LocalDate.now(),
+                saleTimestamp = null,
+                agent = "Peach"
+            ))
+        }
+
+        confirmVerified(realEstateRepository)
     }
 }

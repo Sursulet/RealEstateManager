@@ -45,9 +45,11 @@ class AddEditFragment : Fragment(R.layout.fragment_edit) {
                             photosAdapter.submitList(uiState.uiModel.photos)
                             editType.setText(uiState.uiModel.type)
                             editPrice.setText(uiState.uiModel.price)
-                            editAddress.setText(uiState.uiModel.address)
+                            editStreet.setText(uiState.uiModel.street)
+                            editExtras.setText(uiState.uiModel.extras)
                             editCity.setText(uiState.uiModel.city)
-                            editState.setText(uiState.uiModel.state)
+                            editCode.setText(uiState.uiModel.code)
+                            editCountry.setText(uiState.uiModel.country)
                             editPrice.setText(uiState.uiModel.price)
                             editDesc.setText(uiState.uiModel.description)
                             editSurface.setText(uiState.uiModel.surface)
@@ -64,7 +66,11 @@ class AddEditFragment : Fragment(R.layout.fragment_edit) {
                         }
                         binding.apply{
                             editLayoutType.error = uiState.typeError
-                            editLayoutAddress.error = uiState.addressError
+                            editLayoutStreet.error = uiState.streetError
+                            editLayoutExtras.error = uiState.extrasError
+                            editLayoutCity.error = uiState.cityError
+                            editLayoutCode.error = uiState.codeError
+                            editLayoutCountry.error = uiState.countryError
                             editLayoutPrice.error = uiState.priceError
                             editLayoutSurface.error = uiState.surfaceError
                             editLayoutAgent.error = uiState.agentError
@@ -82,9 +88,11 @@ class AddEditFragment : Fragment(R.layout.fragment_edit) {
         binding.apply {
             editType.addTextChangedListener { viewModel.realEstateType = it.toString() }
             editPrice.addTextChangedListener { viewModel.realEstatePrice = it.toString() }
-            editAddress.addTextChangedListener { viewModel.realEstateAddress = it.toString() }
+            editStreet.addTextChangedListener { viewModel.realEstateStreet = it.toString() }
+            editExtras.addTextChangedListener { viewModel.realEstateExtras = it.toString() }
             editCity.addTextChangedListener { viewModel.realEstateCity = it.toString() }
-            editState.addTextChangedListener { viewModel.realEstateState = it.toString() }
+            editCode.addTextChangedListener { viewModel.realEstateCode = it.toString() }
+            editCountry.addTextChangedListener { viewModel.realEstateCountry = it.toString() }
             editDesc.addTextChangedListener { viewModel.realEstateDesc = it.toString() }
             editNearest.addTextChangedListener { viewModel.realEstateNearest = it.toString() }
             editSurface.addTextChangedListener { viewModel.realEstateSurface = it.toString() }

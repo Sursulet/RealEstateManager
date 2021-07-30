@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -25,6 +26,8 @@ import com.openclassrooms.realestatemanager.ui.loan.LoanFragment
 import com.openclassrooms.realestatemanager.ui.map.MapFragment
 import com.openclassrooms.realestatemanager.ui.map.MapsActivity
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
+import com.openclassrooms.realestatemanager.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,14 +38,23 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private val REQUEST_PERMISSIONS_REQUEST_CODE = 123
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
+        /*
+        if(viewModel.checkPermissions()) {
+            viewModel.startLocationUpdates()
+        } else {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_PERMISSIONS_REQUEST_CODE)
+        }
+
+         */
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
@@ -68,6 +80,7 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
     override fun onResume() {
         super.onResume()
 
+        /*
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
@@ -75,11 +88,13 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
         } else {
             viewModel.startLocationUpdates()
         }
+
+         */
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopLocationUpdates()
+        //viewModel.stopLocationUpdates()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

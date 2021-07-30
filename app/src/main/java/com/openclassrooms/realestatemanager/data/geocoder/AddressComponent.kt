@@ -3,16 +3,16 @@ package com.openclassrooms.realestatemanager.data.geocoder
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class AddressComponent {
+class AddressComponent (
     @SerializedName("long_name")
     @Expose
-    var longName: String? = null
+    var longName: String,
 
     @SerializedName("short_name")
     @Expose
-    var shortName: String? = null
+    var shortName: String,
 
     @SerializedName("types")
     @Expose
-    var types: List<String>? = null
-}
+    var types: List<String>
+)

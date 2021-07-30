@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.databinding.FragmentMapBinding
 import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
@@ -32,6 +35,7 @@ class MapFragment : Fragment() {
         return binding.root
     }
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.mapView.onCreate(savedInstanceState)
@@ -43,13 +47,20 @@ class MapFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.uiState.collect { uiState ->
-                Log.d(TAG, "onViewCreated: $uiState")
-                /*
-                uiState.map {
-                    map?.addMarker(MarkerOptions().position(it).title("Marker in Sydney"))
-                    map?.moveCamera(CameraUpdateFactory.newLatLng(it))
+            viewModel.uiState.collect { state ->
+                Log.d(TAG, "onViewCreated: $state")
+                when(state) {
+                    MapsViewModel.MapsUiState.Empty -> {}
+                    is MapsViewModel.MapsUiState.Available -> {
+                        state.mapsUiModel.markers.map {
+                            map?.addMarker(MarkerOptions().position(it).title("Marker in Sydney"))
+                            map?.moveCamera(CameraUpdateFactory.newLatLng(it))
+                        }
+                    }
+                    is MapsViewModel.MapsUiState.ShowErrorMessage -> TODO()
                 }
+                /*
+
                 
                  */
             }

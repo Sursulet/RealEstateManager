@@ -19,11 +19,11 @@ class DetailViewModel @Inject constructor(
     private val realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
     private val geocoderRepository: GeocoderRepository
-) : ViewModel() {
+) : ViewModel() { //TODO LiveData
 
     val uiModelLiveData = liveData {
         //sharedRepository.realEstateIdState.collect { id ->
-        val id = currentIdRepository.getRealEstateId()
+        val id = currentIdRepository.currentId.collect { id ->
             if (id != null) {
                 realEstateRepository.getRealEstate(id).collect { realEstate ->
                     photoRepository.getPhotos(realEstate.id).map { photos ->
@@ -49,9 +49,11 @@ class DetailViewModel @Inject constructor(
                                 status = realEstate.status,
                                 nearest = realEstate.nearest,
                                 photos = photosUiModel,
-                                coordinates = geocoderRepository.getCoordinates(realEstate.address).results?.firstOrNull()?.geometry?.location?.let {
-                                                    LatLng(it.lat!!, it.lng!!)
-                                                }
+                                coordinates = geocoderRepository.getCoordinates(realEstate.address)
+                                    .results?.firstOrNull()?.geometry
+                                    ?.location?.let { location ->
+                                        LatLng(location.lat!!, location.lng!!)
+                                    }
                             )
                         }
 
@@ -59,7 +61,7 @@ class DetailViewModel @Inject constructor(
 
                 }
             }
-        //}
+        }
     }
 
 }

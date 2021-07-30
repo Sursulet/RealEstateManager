@@ -32,7 +32,19 @@ class LoanFragment : Fragment(R.layout.fragment_loan) {
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { uiState ->
-                binding.loanResult.text = uiState.value.toString()
+                when (uiState) {
+                    is LoanViewModel.LoanUiState.Success -> {
+                        binding.loanResult.text = uiState.value.toString()
+                    }
+                    is LoanViewModel.LoanUiState.Error -> {
+                        binding.apply {
+                            loanContributionLayout.error = uiState.contributionError
+                            loanDuration.error = uiState.yearsError
+                            loanRate.error = uiState.rateError
+                        }
+                    }
+                }
+
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.repositories
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,11 +11,9 @@ import javax.inject.Singleton
 class CurrentIdRepository @Inject constructor() {
 
     private val _currentId = MutableStateFlow<Long?>(null)
-    val currentId: StateFlow<Long?> = _currentId.asStateFlow()
+    val currentId: Flow<Long?> = _currentId.asStateFlow()
 
-    fun getRealEstateId(): Long? {
-        return currentId.value
-    }
+
 
     fun setRealEstateId(realEstateId: Long) {
         _currentId.value = realEstateId
