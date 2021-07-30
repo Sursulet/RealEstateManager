@@ -10,8 +10,8 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.openclassrooms.realestatemanager"
-        buildConfigField "String", "GOOGLE_MAPS_KEY", OC_P6_Google_Maps_Sdk_key
-        resValue 'string', 'google_maps_key', OC_P6_Google_Maps_Sdk_key
+        buildConfigField "String", "GOOGLE_MAPS_KEY", realEstateManager_mapsapikey
+        resValue 'string', 'google_maps_key', realEstateManager_mapsapikey
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

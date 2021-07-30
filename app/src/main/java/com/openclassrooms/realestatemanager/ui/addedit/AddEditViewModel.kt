@@ -34,9 +34,9 @@ class AddEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val lol =  currentIdRepository.currentId.value
-            println("lol = $lol")
-            _realEstate.value = lol?.let { id -> realEstateRepository.getRealEstate(id).first() }
+            _realEstate.value = currentIdRepository.currentId.value?.let { id ->
+                realEstateRepository.getRealEstate(id).first()
+            }
 
             _realEstate.combine(newPhoto) { estate, newPhoto ->
                 val photos = if (estate?.id != null) {

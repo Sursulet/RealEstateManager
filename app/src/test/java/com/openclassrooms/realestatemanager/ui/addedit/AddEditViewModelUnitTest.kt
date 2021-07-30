@@ -202,27 +202,8 @@ class EditViewModelUnitTest {
         assertThat(viewModel.uiState.value).isEqualTo(state)
 
         coVerify(exactly = 1) {
-            realEstateRepository.update(
-                eq(
-                    RealEstate(
-                        id = 0,
-                        type = "House",
-                        city = "Paris",
-                        price = 123000000f,
-                        surface = 234,
-                        rooms = 5,
-                        bathrooms = 2,
-                        bedrooms = 3,
-                        description = "",
-                        address = "16 Rue Auguste Perret, x, Paris, 75013, France",
-                        nearest = "school",
-                        status = false,
-                        created = LocalDate.now(),
-                        saleTimestamp = null,
-                        agent = "Peach"
-                    )
-                )
-            )
+            realEstateRepository.getRealEstate(1)
+            realEstateRepository.update(any())
         }
 
         confirmVerified(realEstateRepository)
