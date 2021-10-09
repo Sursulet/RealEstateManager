@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.utils
 
-import android.R
 import android.content.Context
 import android.widget.Toast
 import java.io.*

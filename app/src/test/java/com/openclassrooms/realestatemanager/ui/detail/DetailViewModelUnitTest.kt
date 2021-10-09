@@ -14,7 +14,9 @@ import io.mockk.every
 import io.mockk.mockkClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 
 import org.junit.Rule
@@ -67,10 +69,11 @@ class DetailViewModelUnitTest {
         }
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun `display detail of real estate`() {
+    fun `display detail of real estate`() = runBlockingTest {
 
-        val value = getValue(viewModel.uiModelLiveData)
+        val value = viewModel.uiState.first()
 
         Truth.assertThat(value?.id).isEqualTo(1)
         Truth.assertThat(value?.type).isEqualTo(realEstateA.type)

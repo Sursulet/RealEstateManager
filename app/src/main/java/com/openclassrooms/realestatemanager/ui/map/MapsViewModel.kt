@@ -13,8 +13,6 @@ import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
 import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import com.openclassrooms.realestatemanager.utils.Constants.getRadius
 import com.openclassrooms.realestatemanager.utils.Utils.checkNetworkConnection
-import com.openclassrooms.realestatemanager.utils.Utils.checkWifi
-import com.openclassrooms.realestatemanager.utils.Utils.isInternetAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +29,7 @@ class MapsViewModel @Inject constructor(
     private val locationPermissionsRepository: LocationPermissionsRepository,
     private val currentLocationRepository: CurrentLocationRepository,
     private val geocoderRepository: GeocoderRepository,
-    private val application: Application
+    application: Application
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<MapsUiState>(MapsUiState.Empty)
@@ -58,7 +56,7 @@ class MapsViewModel @Inject constructor(
             ) { connexion, permissions, zoom, estates, lastLocation ->
                 if (connexion && permissions) {
                     val list = estates.mapNotNull { realEstate ->
-                        geocoderRepository.getCoordinates(realEstate.address)
+                        geocoderRepository.getCoordinates(realEstate.address.toString())
                             .results?.firstOrNull()?.geometry
                             ?.location?.let {
                                 LatLng(it.lat!!, it.lng!!)
@@ -94,7 +92,6 @@ class MapsViewModel @Inject constructor(
 
 
             }.collect {
-                Log.d(TAG, "RESULT: $it")
                 _uiState.value = it//MapsUiState.Available(it)
             }
             

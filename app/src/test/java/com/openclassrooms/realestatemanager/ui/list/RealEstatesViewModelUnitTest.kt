@@ -2,14 +2,11 @@ package com.openclassrooms.realestatemanager.ui.list
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import com.openclassrooms.realestatemanager.di.CoroutinesDispatchers
 import com.openclassrooms.realestatemanager.repositories.*
 import com.openclassrooms.realestatemanager.utilities.*
 import com.openclassrooms.realestatemanager.utils.SearchQuery
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -77,10 +74,7 @@ class RealEstatesViewModelUnitTest {
             realEstateRepository = realEstatesRepository,
             photoRepository = photoRepository,
             searchQueryRepository = searchQueryRepository,
-            coroutineDispatchers = CoroutinesDispatchers(
-                testCoroutineRule.testCoroutineDispatcher,
-                testCoroutineRule.testCoroutineDispatcher
-            )
+            ioDispatcher = testCoroutineRule.testCoroutineDispatcher
         )
     }
 

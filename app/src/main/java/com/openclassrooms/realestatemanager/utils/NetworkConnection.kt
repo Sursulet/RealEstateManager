@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.callbackFlow
 
 class NetworkConnection(
-    private val context: Context
+    context: Context
 ) : Flow<Boolean> {
 
     private var connectivityManager: ConnectivityManager =

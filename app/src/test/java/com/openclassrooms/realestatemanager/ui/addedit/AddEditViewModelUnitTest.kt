@@ -2,19 +2,18 @@ package com.openclassrooms.realestatemanager.ui.addedit
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
+import com.openclassrooms.realestatemanager.data.local.entities.Address
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
 import com.openclassrooms.realestatemanager.repositories.CurrentPhotoRepository
 import com.openclassrooms.realestatemanager.repositories.PhotoRepository
 import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
-import com.openclassrooms.realestatemanager.utilities.MainCoroutineRule
-import com.openclassrooms.realestatemanager.utilities.realEstateA
-import com.openclassrooms.realestatemanager.utilities.testPhotos
-import com.openclassrooms.realestatemanager.utilities.testUiModelPhotos
+import com.openclassrooms.realestatemanager.utilities.*
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -29,7 +28,9 @@ class EditViewModelUnitTest {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
+    var mainCoroutineRule = TestCoroutineRule()
+
+    private val testDispatcher = TestCoroutineDispatcher()
 
     private val currentIdRepository = mockkClass(CurrentIdRepository::class)
     private val realEstateRepository = mockkClass(RealEstateRepository::class)
@@ -47,14 +48,13 @@ class EditViewModelUnitTest {
                 RealEstate(
                     id = 0,
                     type = "House",
-                    city = "Paris",
                     price = 123000000f,
                     surface = 234,
                     rooms = 5,
                     bathrooms = 2,
                     bedrooms = 3,
                     description = "",
-                    address = "16 Rue Auguste Perret, x, Paris, 75013, France",
+                    address = Address("16 Rue Auguste Perret", null, "Paris", "75013", "France"),
                     nearest = "school",
                     status = false,
                     created = LocalDate.now(),
@@ -70,12 +70,45 @@ class EditViewModelUnitTest {
     }
 
     @Test
-    fun `empty fields`() = runBlockingTest {
+    fun `display add mode`() = mainCoroutineRule.runBlockingTest {
         val viewModel = AddEditViewModel(
             currentIdRepository = currentIdRepository,
             realEstateRepository = realEstateRepository,
             photoRepository = photoRepository,
-            currentPhotoRepository = currentPhotoRepository
+            currentPhotoRepository = currentPhotoRepository,
+            ioDispatcher = mainCoroutineRule.testCoroutineDispatcher
+        )
+
+        val state =
+            AddEditViewModel.AddEditUiState.Content(
+                AddEditUiModel(
+                    photos = testUiModelPhotos,
+                    type = "",
+                    price = "",
+                    surface = "",
+                    rooms = "",
+                    description = "",
+                    street = "",
+                    extras = "",
+                    city = "",
+                    code = "",
+                    nearest = "",
+                    status = false,
+                    agent = "",
+                )
+            )
+
+        assertThat(viewModel.uiState.value).isEqualTo(state)
+    }
+
+    @Test
+    fun `empty fields`() = mainCoroutineRule.runBlockingTest {
+        val viewModel = AddEditViewModel(
+            currentIdRepository = currentIdRepository,
+            realEstateRepository = realEstateRepository,
+            photoRepository = photoRepository,
+            currentPhotoRepository = currentPhotoRepository,
+            ioDispatcher = mainCoroutineRule.testCoroutineDispatcher
         )
 
         viewModel.realEstateType = ""
@@ -101,7 +134,7 @@ class EditViewModelUnitTest {
                 null,
                 "type is empty",
                 "street is empty",
-                "extrat is empty",
+                "extras is empty",
                 "city is empty",
                 "code is empty",
                 "country is empty",
@@ -113,12 +146,13 @@ class EditViewModelUnitTest {
     }
 
     @Test
-    fun `insert a real estate`() = runBlockingTest {
+    fun `insert a real estate`() = mainCoroutineRule.testCoroutineDispatcher.runBlockingTest {
         val viewModel = AddEditViewModel(
             currentIdRepository = currentIdRepository,
             realEstateRepository = realEstateRepository,
             photoRepository = photoRepository,
-            currentPhotoRepository = currentPhotoRepository
+            currentPhotoRepository = currentPhotoRepository,
+            ioDispatcher = mainCoroutineRule.testCoroutineDispatcher
         )
 
         viewModel.realEstateType = "House"
@@ -148,14 +182,13 @@ class EditViewModelUnitTest {
                 RealEstate(
                     id = 0,
                     type = "House",
-                    city = "Paris",
                     price = 123000000f,
                     surface = 234,
                     rooms = 5,
                     bathrooms = 2,
                     bedrooms = 3,
                     description = "",
-                    address = "16 Rue Auguste Perret, x, Paris, 75013, France",
+                    address = Address("16 Rue Auguste Perret", null, "Paris", "75013", "France"),
                     nearest = "school",
                     status = false,
                     created = LocalDate.now(),
@@ -169,14 +202,15 @@ class EditViewModelUnitTest {
     }
 
     @Test
-    fun `update real estate`() = runBlockingTest {
+    fun `update real estate`() = mainCoroutineRule.testCoroutineDispatcher.runBlockingTest {
         every { currentIdRepository.currentId } returns MutableStateFlow(1)
 
         val viewModel = AddEditViewModel(
             currentIdRepository = currentIdRepository,
             realEstateRepository = realEstateRepository,
             photoRepository = photoRepository,
-            currentPhotoRepository = currentPhotoRepository
+            currentPhotoRepository = currentPhotoRepository,
+            ioDispatcher = mainCoroutineRule.testCoroutineDispatcher
         )
 
         viewModel.realEstateType = "House"
@@ -203,7 +237,22 @@ class EditViewModelUnitTest {
 
         coVerify(exactly = 1) {
             realEstateRepository.getRealEstate(1)
-            realEstateRepository.update(any())
+            realEstateRepository.update(RealEstate(
+                id = 1,
+                type = "House",
+                price = 123000000f,
+                surface = 234,
+                rooms = 5,
+                bathrooms = 2,
+                bedrooms = 3,
+                description = "",
+                address = Address("16 Rue Auguste Perret", null, "Paris", "75013", "France"),
+                nearest = "school",
+                status = false,
+                created = LocalDate.now(),
+                saleTimestamp = null,
+                agent = "Peach"
+            ))
         }
 
         confirmVerified(realEstateRepository)

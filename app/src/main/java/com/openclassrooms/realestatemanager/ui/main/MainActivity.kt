@@ -1,16 +1,11 @@
 package com.openclassrooms.realestatemanager.ui.main
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.openclassrooms.realestatemanager.R
@@ -26,8 +21,6 @@ import com.openclassrooms.realestatemanager.ui.loan.LoanFragment
 import com.openclassrooms.realestatemanager.ui.map.MapFragment
 import com.openclassrooms.realestatemanager.ui.map.MapsActivity
 import com.openclassrooms.realestatemanager.ui.search.SearchFragment
-import com.openclassrooms.realestatemanager.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,17 +37,6 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-
-        /*
-        if(viewModel.checkPermissions()) {
-            viewModel.startLocationUpdates()
-        } else {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_PERMISSIONS_REQUEST_CODE)
-        }
-
-         */
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
@@ -75,26 +57,6 @@ class MainActivity : AppCompatActivity(), OnRealEstateClickListener {
             }
         }
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        /*
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_PERMISSIONS_REQUEST_CODE)
-        } else {
-            viewModel.startLocationUpdates()
-        }
-
-         */
-    }
-
-    override fun onPause() {
-        super.onPause()
-        //viewModel.stopLocationUpdates()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

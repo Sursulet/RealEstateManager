@@ -1,16 +1,18 @@
 package com.openclassrooms.realestatemanager.ui.addedit
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openclassrooms.realestatemanager.data.local.entities.Address
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
+import com.openclassrooms.realestatemanager.di.IoDispatcher
 import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
 import com.openclassrooms.realestatemanager.repositories.CurrentPhotoRepository
 import com.openclassrooms.realestatemanager.repositories.PhotoRepository
 import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
 import com.openclassrooms.realestatemanager.ui.detail.PhotoUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +22,8 @@ class AddEditViewModel @Inject constructor(
     private val currentIdRepository: CurrentIdRepository,
     private val realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
-    private val currentPhotoRepository: CurrentPhotoRepository
+    private val currentPhotoRepository: CurrentPhotoRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val newPhoto = currentPhotoRepository.photo
@@ -33,7 +36,7 @@ class AddEditViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             _realEstate.value = currentIdRepository.currentId.value?.let { id ->
                 realEstateRepository.getRealEstate(id).first()
             }
@@ -59,11 +62,11 @@ class AddEditViewModel @Inject constructor(
                     photos = uiPhotos,
                     type = estate?.type ?: "",
                     price = estate?.price?.toString() ?: "",
-                    street = estate?.address ?: "",
-                    extras = estate?.address ?: "",
-                    city = estate?.city ?: "",
-                    code = estate?.address ?: "",
-                    country = estate?.city ?: "",
+                    street = estate?.address?.street ?: "",
+                    extras = estate?.address?.extras ?: "",
+                    city = estate?.address?.city ?: "",
+                    code = estate?.address?.code.toString(),
+                    country = estate?.address?.country ?: "",
                     nearest = estate?.nearest ?: "",
                     description = estate?.description ?: "",
                     surface = estate?.surface?.toString() ?: "",
@@ -97,7 +100,7 @@ class AddEditViewModel @Inject constructor(
     var realEstateStatus: Boolean = false
 
     fun onSaveClick() = viewModelScope.launch {
-        val realEstateId= currentIdRepository.currentId.value
+        val realEstateId = currentIdRepository.currentId.value
 
         println("onSaveClick() called : $realEstateId")
 
@@ -117,7 +120,7 @@ class AddEditViewModel @Inject constructor(
             } else null,
             extrasError = if (realEstateExtras.isBlank()) {
                 hasError = true
-                "extrat is empty"
+                "extras is empty"
             } else null,
             cityError = if (realEstateCity.isBlank()) {
                 hasError = true
@@ -149,18 +152,23 @@ class AddEditViewModel @Inject constructor(
             _uiState.value = errorState
             return@launch
         }
-        
+
         if (realEstateId != null) {
             val updateRealEstate = _realEstate.value!!.copy(
                 type = realEstateType,
                 description = realEstateDesc,
-                city = realEstateCity,
                 price = realEstatePrice.toFloatOrNull(),
                 surface = realEstateSurface.toInt(),
                 rooms = realEstateRooms.toIntOrNull(),
                 bedrooms = realEstateBedrooms.toIntOrNull(),
                 bathrooms = realEstateBathrooms.toIntOrNull(),
-                address = "$realEstateStreet, $realEstateExtras, $realEstateCity, $realEstateCode, $realEstateCountry",
+                address = Address(
+                    street = realEstateStreet,
+                    extras = realEstateExtras,
+                    city = realEstateCity,
+                    code = realEstateCode,
+                    country = realEstateCountry
+                ),
                 nearest = realEstateNearest,
                 saleTimestamp = saleTimestamp,
                 agent = realEstateAgent
@@ -171,13 +179,18 @@ class AddEditViewModel @Inject constructor(
             val newRealEstate = RealEstate(
                 type = realEstateType,
                 description = realEstateDesc,
-                city = realEstateCity,
                 price = realEstatePrice.toFloatOrNull(),
                 surface = realEstateSurface.toInt(),
                 rooms = realEstateRooms.toIntOrNull(),
                 bedrooms = realEstateBedrooms.toIntOrNull(),
                 bathrooms = realEstateBathrooms.toIntOrNull(),
-                address = "$realEstateStreet, $realEstateExtras, $realEstateCity, $realEstateCode, $realEstateCountry",
+                address = Address(
+                    street = realEstateStreet,
+                    extras = realEstateExtras,
+                    city = realEstateCity,
+                    code = realEstateCode,
+                    country = realEstateCountry
+                ),
                 nearest = realEstateNearest,
                 saleTimestamp = saleTimestamp,
                 agent = realEstateAgent
@@ -204,7 +217,7 @@ class AddEditViewModel @Inject constructor(
 
     private fun createPhotos(id: Long, photos: List<PhotoUiModel>) = viewModelScope.launch {
         photos.map {
-            val photo = Photo(title = it.title,bitmap = it.bitmap,realEstateId = id)
+            val photo = Photo(title = it.title, bitmap = it.bitmap, realEstateId = id)
             photoRepository.insertPhoto(photo)
         }
     }

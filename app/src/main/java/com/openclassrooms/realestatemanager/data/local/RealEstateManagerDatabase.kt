@@ -7,6 +7,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.openclassrooms.realestatemanager.data.Converters
 import com.openclassrooms.realestatemanager.data.local.dao.PhotoDao
 import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
+import com.openclassrooms.realestatemanager.data.local.entities.Address
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 import com.openclassrooms.realestatemanager.utils.Utils.getBitmapFromURL
@@ -44,11 +45,10 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                     RealEstate(
                         id = 1,
                         type = "Penthouse",
-                        city = "Paris",//"Upper East Side",
                         price = 2987200f,
                         description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean aliquam in ex vitae mollis. Duis semper lobortis gravida. Nam imperdiet sodales nisl. Donec cursus, erat nec fermentum consequat, urna orci blandit enim, at volutpat nunc est non nulla. Nunc commodo blandit neque, lacinia molestie dui pellentesque nec. Proin ultrices ex quis porttitor dignissim. Praesent tempor ex urna, ac accumsan eros finibus sed. Etiam accumsan imperdiet dictum.",
                         status = false,
-                        address = "Rue de Rivoli, 75001, Paris, FRANCE",//"740 Park Avenue, Appt 6/7A, New York, NY 10021, United States",
+                        address = Address("Rue de Rivoli", code = "75001", city = "Paris", country = "FRANCE", extras = null),//"740 Park Avenue, Appt 6/7A, New York, NY 10021, United States",
                         surface = 750,
                         rooms = 8,
                         bathrooms = 2,
@@ -62,11 +62,10 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
                     RealEstate(
                         id = 2,
                         type = "House",
-                        city = "Southampton",
                         price = 23f,
                         description = "Donec vulputate eros sed dictum sodales. Praesent consequat nibh quam, quis euismod odio rutrum in. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis faucibus urna et imperdiet luctus. Cras ac libero pretium, cursus eros in, mattis felis. Nam placerat massa in elit laoreet posuere. Praesent auctor justo quis mattis lacinia. Pellentesque efficitur, tortor bibendum molestie vehicula, orci mauris accumsan est, ut vehicula augue lectus sed justo. ",
                         status = false,
-                        address = "Chilworth Drove, Chilworth, Southampton, SO16, United Kingdom",
+                        address = Address(street = "Chilworth Drove, Chilworth", city = "Southampton", code = "SO16", country = "United Kingdom", extras = null),
                         surface = 800,
                         rooms = 9,
                         bathrooms = 2,

@@ -112,7 +112,6 @@ class MapsFragment : Fragment() {
                          */
                     }
                     is MapsViewModel.MapsUiState.ShowErrorMessage -> {
-                        Log.d(TAG, "onViewCreated: ERROR: ${state.permission} || ${state.network}")
                         if (!state.network) {
                             Toast.makeText(
                                 requireContext(),
@@ -134,11 +133,7 @@ class MapsFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume: ")
-        //viewModel.check()
-    }
+
 
     override fun onPause() {
         super.onPause()

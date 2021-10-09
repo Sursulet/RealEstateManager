@@ -5,13 +5,13 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
-import android.net.*
-import android.net.wifi.WifiManager
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkInfo
+import android.net.NetworkRequest
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.gms.maps.model.LatLng
-import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -72,7 +72,8 @@ object Utils {
         //return wifi.isWifiEnabled
         val cm =
             context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val activeNetwork = cm.activeNetworkInfo
+        //val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         return activeNetwork?.isConnectedOrConnecting == true
     }
 
@@ -109,19 +110,16 @@ object Utils {
 
             override fun onUnavailable() {
                 super.onUnavailable()
-                Log.d(TAG, "onUnavailable: ")
                 trySend(false)
             }
 
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                Log.d(TAG, "onAvailable: ")
                 trySend(true)
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                Log.d(TAG, "onLost: ")
                 trySend(false)
             }
         }
@@ -150,7 +148,7 @@ object Utils {
         return sentence
     }
 
-    fun splitAddress(address: String): List<String> {
+    private fun splitAddress(address: String): List<String> {
         return address.split(",")
     }
 
@@ -210,7 +208,6 @@ object Utils {
         dist = rad2deg(dist)
         dist *= 60 * 1.1515
 
-        Log.d(TAG, "getDistance: $dist")
         return dist
     }
 

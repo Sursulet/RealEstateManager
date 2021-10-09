@@ -23,6 +23,9 @@ import org.junit.runners.JUnit4
 @SmallTest
 class RealEstateDaoTest {
 
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
+
     private lateinit var database: RealEstateManagerDatabase
     private lateinit var dao: RealEstateDao
 

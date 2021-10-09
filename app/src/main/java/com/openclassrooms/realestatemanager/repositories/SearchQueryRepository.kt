@@ -16,3 +16,4 @@ class SearchQueryRepository @Inject constructor() {
         _searchQuery.value = query
     }
 }
+

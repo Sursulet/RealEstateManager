@@ -48,7 +48,6 @@ class MapFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { state ->
-                Log.d(TAG, "onViewCreated: $state")
                 when(state) {
                     MapsViewModel.MapsUiState.Empty -> {}
                     is MapsViewModel.MapsUiState.Available -> {

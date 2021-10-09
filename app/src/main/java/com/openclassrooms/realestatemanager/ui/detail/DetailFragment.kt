@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -16,6 +17,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentDetailBinding
 import com.openclassrooms.realestatemanager.ui.addedit.AddEditActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
@@ -54,23 +56,26 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             replace(R.id.detail_map, fragment, null)
         }
 
-        viewModel.uiModelLiveData.observe(viewLifecycleOwner) {
-            binding.root.isVisible = true
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.uiState.collect { uiState ->
+                binding.root.isVisible = true
 
-            binding.apply {
-                photosAdapter.submitList(it?.photos)
+                binding.apply {
+                    photosAdapter.submitList(uiState?.photos)
 
-                detailDescription.text = it?.description
-                detailBathrooms.text = it?.bathrooms.toString()
-                detailBedrooms.text = it?.bedrooms.toString()
-                detailLocation.text = it?.address
-                detailRooms.text = it?.rooms.toString()
-                detailSurface.text = it?.surface.toString()
+                    detailDescription.text = uiState?.description
+                    detailBathrooms.text = uiState?.bathrooms.toString()
+                    detailBedrooms.text = uiState?.bedrooms.toString()
+                    detailLocation.text = uiState?.address
+                    detailRooms.text = uiState?.rooms.toString()
+                    detailSurface.text = uiState?.surface.toString()
 
-                it?.coordinates?.let { xy ->
-                    map?.addMarker(MarkerOptions().position(xy).title(it.address))
-                    map?.moveCamera(CameraUpdateFactory.newLatLngZoom(xy, 15f))
+                    uiState?.coordinates?.let { xy ->
+                        map?.addMarker(MarkerOptions().position(xy).title(uiState.address))
+                        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(xy, 15f))
+                    }
                 }
+
             }
         }
 

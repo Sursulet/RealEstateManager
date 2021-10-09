@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.list
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentRealEstatesBinding
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -46,6 +48,7 @@ class RealEstatesFragment : Fragment(R.layout.fragment_real_estates), OnRealEsta
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.uiModels.collect {
+                Log.d(TAG, "onViewCreated: $it")
                 realEstateAdapter.submitList(it)
             }
         }

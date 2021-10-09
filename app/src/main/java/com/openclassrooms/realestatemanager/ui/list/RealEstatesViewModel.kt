@@ -1,13 +1,16 @@
 package com.openclassrooms.realestatemanager.ui.list
 
 import android.graphics.Color
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.di.CoroutinesDispatchers
+import com.openclassrooms.realestatemanager.di.IoDispatcher
 import com.openclassrooms.realestatemanager.repositories.*
 import com.openclassrooms.realestatemanager.utils.Constants.NO_REAL_ESTATE_ID
+import com.openclassrooms.realestatemanager.utils.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +22,7 @@ class RealEstatesViewModel @Inject constructor(
     realEstateRepository: RealEstateRepository,
     private val photoRepository: PhotoRepository,
     searchQueryRepository: SearchQueryRepository,
-    coroutineDispatchers: CoroutinesDispatchers
+    @IoDispatcher ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val twoPane = twoPaneRepository.twoPane
@@ -50,22 +53,24 @@ class RealEstatesViewModel @Inject constructor(
     val uiModels = MutableStateFlow<List<RealEstateUiModel>>(listOf())
 
     init {
-        viewModelScope.launch(coroutineDispatchers.iOCoroutineDispatcher) {
+        viewModelScope.launch(ioDispatcher) {
             combine(twoPane, selectedId, realEstatesFlow) { twoPane, id, list ->
                 list.map {
+                    Log.d(TAG, "REAL: $it")
                     val photo = photoRepository.getPhoto(it.id).filterNotNull().first()
                     val color = if (twoPane && id == it.id) R.color.colorAccent else Color.WHITE
                     RealEstateUiModel(
                         id = it.id,
                         bitmap = photo.bitmap,
                         type = it.type,
-                        city = it.city,
+                        city = it.address.city,
                         price = "$" + it.price.toString(),
                         backgroundColorRes = color,
                         style = "color"
                     )
                 }
             }.collect {
+                Log.d(TAG, "LIST: $it")
                 uiModels.value = it
             }
         }

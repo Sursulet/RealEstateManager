@@ -3,17 +3,16 @@ package com.openclassrooms.realestatemanager.ui.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.google.common.truth.Truth.assertThat
 import com.openclassrooms.realestatemanager.data.local.RealEstateManagerDatabase
-import com.openclassrooms.realestatemanager.getOrAwaitValue
-import com.openclassrooms.realestatemanager.repositories.*
+import com.openclassrooms.realestatemanager.repositories.CurrentIdRepository
+import com.openclassrooms.realestatemanager.repositories.GeocoderRepository
+import com.openclassrooms.realestatemanager.repositories.PhotoRepository
+import com.openclassrooms.realestatemanager.repositories.RealEstateRepository
 import org.junit.After
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.doReturn
 
 class DetailViewModelTest {
 

@@ -11,14 +11,15 @@ import com.openclassrooms.realestatemanager.data.local.dao.PhotoDao
 import com.openclassrooms.realestatemanager.data.local.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
+import com.openclassrooms.realestatemanager.utils.Constants.AUTHORITY
 import com.openclassrooms.realestatemanager.utils.Constants.DATABASE_NAME
+import com.openclassrooms.realestatemanager.utils.Constants.TABLE_ESTATE_NAME
+import com.openclassrooms.realestatemanager.utils.Constants.TABLE_PHOTO_NAME
 
 
 class RealEstateContentProvider : ContentProvider() {
 
-    private val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
-    private val TABLE_ESTATE_NAME = RealEstate::class.java.simpleName
-    private val TABLE_PHOTO_NAME = Photo::class.java.simpleName
+
 
     private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
         addURI(AUTHORITY, TABLE_ESTATE_NAME, 1)

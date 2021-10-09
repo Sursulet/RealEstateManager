@@ -2,6 +2,8 @@ package com.openclassrooms.realestatemanager.utils
 
 import android.app.Activity
 import android.location.Location
+import com.openclassrooms.realestatemanager.data.local.entities.Address
+import com.openclassrooms.realestatemanager.data.local.entities.Photo
 import com.openclassrooms.realestatemanager.data.local.entities.RealEstate
 
 object Constants {
@@ -9,6 +11,10 @@ object Constants {
     const val TAG = "PEACH" //TODO
 
     const val DATABASE_NAME = "real_estate_manager_db"
+
+    const val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
+    const val TABLE_ESTATE_NAME = "RealEstate::class.java.simpleName"
+    const val TABLE_PHOTO_NAME = "Photo::class.java.simpleName"
 
     const val REQUEST_PERMISSIONS_REQUEST_CODE = 123
     const val RATE: Double = 0.84
@@ -30,14 +36,13 @@ object Constants {
     const val REAL_ESTATE_SAVED_STATE_KEY = "REAL_ESTATE_SAVED_STATE_KEY"
     val NO_REAL_ESTATE = RealEstate(
         type = "",
-        city = "",
         price = 0F,
         surface = 0,
         rooms = 0,
         bathrooms = 0,
         bedrooms = 0,
         description = "",
-        address = "",
+        address = Address(street = "","","","",""),
         nearest = "",
         status = false,
         agent = "",

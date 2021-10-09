@@ -80,7 +80,7 @@
             android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_title_surface"
-            tools:text="oihefmnqlkjmfql" />
+            tools:text="45" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/detail_title_rooms"
@@ -101,7 +101,7 @@
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_title_rooms"
-            tools:text="oihefmnqlkjmfql" />
+            tools:text="1" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/detail_title_bathrooms"
@@ -121,7 +121,7 @@
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_title_bathrooms"
-            tools:text="oihefmnqlkjmfql" />
+            tools:text="1" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/detail_title_bedrooms"
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_title_bedrooms"
-            tools:text="oihefmnqlkjmfql" />
+            tools:text="1" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/detail_title_location"
